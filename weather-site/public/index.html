@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
-<!-- 2026-01-18 Sun 11:49 -->
+<!-- 2026-01-20 Tue 05:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Proyecto ICCD332 Arquitectura de Computadores</title>
@@ -11,18 +11,41 @@
 <meta name="generator" content="Org Mode" />
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Inter:wght@400;700;900&display=swap');
+  /* Fuentes */
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700;900&display=swap');
 
-  /* CONFIGURACIÓN DE PÁGINA Y ESTRUCTURA */
+  /* CONFIGURACIÓN DE PÁGINA */
   body {
     background-color: #000000;
     color: #ffffff;
-    font-family: 'Inter', sans-serif;
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 0.9em; 
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.8;
+    cursor: default; /* Cursor normal */
   }
 
-  /* SIDEBAR IZQUIERDO (ÍNDICE) */
+  /* --- EFECTO SPOTLIGHT --- */
+  #spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+    /* Tamaño 500px */
+    width: 500px; 
+    height: 500px;
+    
+    /* Intensidad al 0.25 (25%) */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+    
+    border-radius: 50%;
+    pointer-events: none; 
+    z-index: 9999;
+    transform: translate(-50%, -50%); 
+    mix-blend-mode: screen; 
+  }
+
+  /* SIDEBAR IZQUIERDO */
   #table-of-contents {
     width: 280px;
     height: 100vh;
@@ -67,10 +90,9 @@
     margin-left: 320px; 
     padding: 60px 40px;
     max-width: 900px;
-    display: block; /* Asegura que el flujo sea vertical */
+    display: block; 
   }
 
-  /* TÍTULOS */
   h1, h2, h3 {
     font-weight: 900;
     text-transform: uppercase;
@@ -80,7 +102,7 @@
     margin-top: 60px;
   }
 
-  /* CÓDIGO CON MECÁNICA Y ULTRA GLOW BLANCO */
+  /* GLOW BLANCO */
   pre.src, pre.example {
     background-color: #000000 !important;
     font-family: 'JetBrains Mono', monospace;
@@ -97,7 +119,6 @@
     transform: translateY(-5px);
   }
 
-  /* TABLAS */
   table {
     width: 100%;
     border-collapse: separate;
@@ -118,7 +139,6 @@
 
   td { padding: 15px; border-bottom: 1px solid #111; color: #666; }
 
-  /* IMÁGENES CON ULTRA GLOW ROJO */
   img {
     width: 100%;
     border-radius: 20px;
@@ -133,9 +153,8 @@
     transform: scale(1.03) rotate(0.5deg);
   }
 
-  /* PIE DE PÁGINA CORREGIDO AL FINAL */
   #postamble {
-    margin-left: 320px; /* Alineado con el contenido */
+    margin-left: 320px; 
     margin-top: 50px;
     padding: 40px;
     border-top: 1px solid #111;
@@ -147,13 +166,41 @@
     display: block;
   }
 
-  /* SCROLLBAR PERSONALIZADO BLANCO */
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #000; }
   ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
 
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const spot = document.createElement('div');
+      spot.id = 'spotlight';
+      document.body.appendChild(spot);
+
+      let mouseX = 0, mouseY = 0;
+      let spotX = 0, spotY = 0;
+      
+      const delay = 0.1; 
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+      });
+
+      function animate() {
+          spotX += (mouseX - spotX) * delay;
+          spotY += (mouseY - spotY) * delay;
+
+          spot.style.left = spotX + 'px';
+          spot.style.top = spotY + 'px';
+
+          requestAnimationFrame(animate);
+      }
+      animate();
+  });
+</script>
 <script>
   window.MathJax = {
     tex: {
@@ -194,31 +241,33 @@
 <h2>&Iacute;ndice</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgda92527">1. City Weather APP</a>
+<li><a href="#org5feacb2">1. City Weather APP</a>
 <ul>
-<li><a href="#org38b26ac">1.1. Estructura del proyecto</a></li>
-<li><a href="#org5b01fec">1.2. Formulación del Problema</a></li>
-<li><a href="#org2a78e4b">1.3. Descripción del código</a></li>
-<li><a href="#orgcbd10e0">1.4. Script ejecutable sh</a></li>
-<li><a href="#org7de1889">1.5. Configuración de Crontab</a></li>
+<li><a href="#org0e26a69">1.1. Estructura del proyecto</a></li>
+<li><a href="#org7f3dd1c">1.2. Formulación del Problema</a></li>
+<li><a href="#org54f6b33">1.3. Descripción del código</a></li>
+<li><a href="#orgb713610">1.4. Script ejecutable sh</a></li>
+<li><a href="#orgeec0b6c">1.5. Configuración de Crontab</a></li>
 </ul>
 </li>
-<li><a href="#orgf9c09f0">2. Presentación de resultados</a>
+<li><a href="#org6d3ef18">2. Presentación de resultados</a>
 <ul>
-<li><a href="#org0c8d56c">2.1. Muestra Aleatoria de datos</a></li>
-<li><a href="#org3cbb86b">2.2. Realice una gráfica de Humedad con respecto al tiempo</a></li>
-<li><a href="#org16ab113">2.3. <b>Opcional</b> Presente alguna gráfica de interés.</a></li>
-<li><a href="#orgc0fc655">2.4. Gráfica de Presión Atmosférica (Opcional)</a></li>
+<li><a href="#orgee27d4f">2.1. Muestra Aleatoria de datos</a></li>
 </ul>
 </li>
-<li><a href="#orgbb2043e">3. Sincronización y Configuración del Servidor</a></li>
-<li><a href="#orga28d637">4. Generación del Sitio Web</a></li>
-<li><a href="#orgda33f42">5. Referencias</a></li>
+<li><a href="#org22532a0">3. Gráfica de la Temperatura en el Tiempo.</a>
+<ul>
+<li><a href="#org6d47f07">3.1. Gráfica de Humedad con respecto al Tiempo.</a></li>
+<li><a href="#org4112e67">3.2. Gráfica de Presión Atmosférica.</a></li>
+</ul>
+</li>
+<li><a href="#orgd961231">4. Sincronización y Configuración del Servidor</a></li>
+<li><a href="#orgb44bb4a">5. Generación del Sitio Web</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgda92527" class="outline-2">
-<h2 id="orgda92527"><span class="section-number-2">1.</span> City Weather APP</h2>
+<div id="outline-container-org5feacb2" class="outline-2">
+<h2 id="org5feacb2"><span class="section-number-2">1.</span> City Weather APP</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Este es el proyecto de fin de semestre en donde se pretende demostrar
@@ -234,8 +283,8 @@ las destrezas obtenidas durante el transcurso de la asignatura de
 </ol>
 </div>
 
-<div id="outline-container-org38b26ac" class="outline-3">
-<h3 id="org38b26ac"><span class="section-number-3">1.1.</span> Estructura del proyecto</h3>
+<div id="outline-container-org0e26a69" class="outline-3">
+<h3 id="org0e26a69"><span class="section-number-3">1.1.</span> Estructura del proyecto</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Se recomienda que el proyecto se cree en el <i>home</i> del sistema
@@ -262,7 +311,7 @@ touch weather-site/build.sh
 </span>touch weather-site/content/index.org
 touch weather-site/content/index.org_archive
 touch weather-site/public/index.html
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">7. Crear placeholders para im&#225;genes (para evitar errores posteriores)
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">7. Crear placeholders para im&#225;genes.
 </span>touch weather-site/content/images/plot.png
 touch weather-site/content/images/temperature.png
 touch weather-site/public/images/plot.png
@@ -285,7 +334,7 @@ subdirectorios. Adaptar los nombres de los archivos según las ciudades
 específicas del grupo.
 </p>
 
-<pre class="example" id="org512cbf4">
+<pre class="example" id="orga89c290">
 .
 ├── CityTemperatureAnalysis.ipynb
 ├── clima-portoviejo-hoy.csv
@@ -320,30 +369,11 @@ específicas del grupo.
 
 9 directories, 22 files
 </pre>
-
-<p>
-Puede usar Emacs para la creación de la estructura de su proyecto
-usando comandos desde el bloque de shell. Recuerde ejecutar el bloque
-con <code>C-c C-c</code>. Para insertar un bloque nuevo utilice <code>C-c C-,</code> o <code>M-x
-org-insert-structure-template</code>. Seleccione la opción <i>s</i> para src y
-adapte el bloque según su código tenga un comandos de shell, código de
-Python o de Java. En este documento <code>.org</code> dispone de varios ejemplos
-funcionales para escribir y presentar el código.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell"><span style="font-weight: bold;">echo</span> <span style="font-style: italic;">'Aqu&#237; va sus comandos'</span>
-</pre>
-</div>
-
-<pre class="example">
-Aquí va sus comandos
-</pre>
 </div>
 </div>
 
-<div id="outline-container-org5b01fec" class="outline-3">
-<h3 id="org5b01fec"><span class="section-number-3">1.2.</span> Formulación del Problema</h3>
+<div id="outline-container-org7f3dd1c" class="outline-3">
+<h3 id="org7f3dd1c"><span class="section-number-3">1.2.</span> Formulación del Problema</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Se desea realizar un registro climatológico de una ciudad
@@ -409,20 +439,20 @@ programa Python/Java.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-b
                 <span style="font-weight: bold; font-style: italic;">w</span> = data.pop(<span style="font-style: italic;">'weather'</span>)[0]
                 <span style="font-weight: bold;">for</span> k, v <span style="font-weight: bold;">in</span> w.items():
                     <span style="font-weight: bold; font-style: italic;">data</span>[f<span style="font-style: italic;">"weather_0_</span>{k}<span style="font-style: italic;">"</span>] = v
-            <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Aplanar JSON
+                    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Aplanar JSON
 </span>            <span style="font-weight: bold; font-style: italic;">df</span> = pd.json_normalize(data, sep=<span style="font-style: italic;">'_'</span>)
             <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Convertir fechas
 </span>            <span style="font-weight: bold;">for</span> col <span style="font-weight: bold;">in</span> [<span style="font-style: italic;">'dt'</span>, <span style="font-style: italic;">'sys_sunrise'</span>, <span style="font-style: italic;">'sys_sunset'</span>]:
                 <span style="font-weight: bold;">if</span> col <span style="font-weight: bold;">in</span> df.columns:
                     <span style="font-weight: bold; font-style: italic;">df</span>[col] = pd.to_datetime(df[col], unit=<span style="font-style: italic;">'s'</span>) - pd.Timedelta(hours=5)
-            <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. Forzar columnas exactas
+                    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. Forzar columnas exactas
 </span>            <span style="font-weight: bold; font-style: italic;">df</span> = df.reindex(columns=EXPECTED_COLUMNS)
             <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">5. Guardar en CSV
 </span>            <span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> os.path.isfile(CSV_PATH):
                 df.to_csv(CSV_PATH, index=<span style="font-weight: bold; text-decoration: underline;">False</span>, header=<span style="font-weight: bold; text-decoration: underline;">True</span>)
             <span style="font-weight: bold;">else</span>:
                 df.to_csv(CSV_PATH, mode=<span style="font-style: italic;">'a'</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>, header=<span style="font-weight: bold; text-decoration: underline;">False</span>)
-            <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Impresi&#243;n de registros.
+                <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Impresi&#243;n de registros.
 </span>            <span style="font-weight: bold; font-style: italic;">fecha_actual</span> = df[<span style="font-style: italic;">'dt'</span>].iloc[0]
             <span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"&#201;xito: Dato registrado para Portoviejo a las </span>{fecha_actual}<span style="font-style: italic;">"</span>)
         <span style="font-weight: bold;">else</span>:
@@ -453,39 +483,99 @@ Crontab configurado correctamente para ejecución cada 15 minutos.
 
 
 <ol class="org-ol">
-<li><p>
-Realizar la presentación del Trabajo utilizando la generación
+<li value="5">Realizar la presentación del Trabajo utilizando la generación
 del sitio web por medio de Emacs. Para esto es necesario crear
 la carpeta <b><b>weather-site</b></b> dentro del proyecto. Puede ajustar el
 <i>look and feel</i> según sus preferencias. El servidor a usar es
 el <b><b>simple-httpd</b></b> integrado en Emacs que debe ser instalado:
-</p>
 <ul class="org-ul">
 <li>Usando comandos Emacs: <code>M-x package-install</code> presionamos
 enter (i.e. RET) y escribimos el nombre del paquete:
 simple-httpd</li>
 <li>Configurando el archivo init.el</li>
-</ul>
+</ul></li>
+</ol>
 
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="font-weight: bold;">use-package</span> simple-httpd
-   <span style="font-weight: bold;">:ensure</span> t)
+<span style="font-weight: bold;">:ensure</span> t)
 </pre>
 </div>
 
+<ol class="org-ol">
+<li value="6">Detalles de cambios del archivo Build.el</li>
+</ol>
 <p>
-Instrucciones de sobre la creación del sitio web se tiene en el
-vídeo de instrucciones y en el archivo <a href="https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Tutoriales/Org-Website/Org-Website.org">Org-Website.org</a> en el
-GitHub del curso
-</p></li>
+Se detallan los estilos específicos inyectados para lograr la estética visual del sitio.
+</p>
 
-<li>Su código debe estar respaldado en GitHub/BitBucket, la
-dirección será remitida en la contestación de la tarea.</li>
+<ol class="org-ol">
+<li value="1">Colores Base y Márgenes</li>
+</ol>
+<p>
+Se define el fondo negro absoluto para el modo "Ultra-Dark" y se
+establece el margen izquierdo vital para que el
+contenido no quede oculto bajo la barra lateral.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-css">    <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Fondo negro y texto blanco</span><span style="font-weight: bold; font-style: italic;"> */</span>
+<span style="font-weight: bold;">body</span> {
+  <span style="font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #000000;">#000000</span>;
+  <span style="font-weight: bold;">color</span>: <span style="color: #000000; background-color: #ffffff;">#ffffff</span>;
+}
+    <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Desplazamiento para respetar la Sidebar fija</span><span style="font-weight: bold; font-style: italic;"> */</span>
+<span style="font-weight: bold;">#content</span> {
+  <span style="font-weight: bold;">margin-left</span>: 320px;
+  <span style="font-weight: bold;">max-width</span>: 900px;
+}
+</pre>
+</div>
+
+<ol class="org-ol">
+<li value="2">Efecto "Glow" en Código</li>
+</ol>
+<p>
+Este es el estilo que hace que los bloques de código brillen al pasar
+el mouse. Se utiliza una
+sombra de caja difusa (<code>box-shadow</code>) blanca.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-css">    <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Glow blanco al pasar el cursor sobre el c&#243;digo</span><span style="font-weight: bold; font-style: italic;"> */</span>
+<span style="font-weight: bold;">pre.src:hover</span> {
+  <span style="font-weight: bold;">border-color</span>: <span style="color: #000000; background-color: #ffffff;">#ffffff</span>;
+  <span style="font-weight: bold;">box-shadow</span>: 0 0 80px 20px <span style="color: #000000; background-color: #ffffff;">rgba(255, 255, 255, 0.25)</span>;
+  <span style="font-weight: bold;">transform</span>: translateY(-5px);
+}
+</pre>
+</div>
+
+<ol class="org-ol">
+<li value="3">Efecto "Neon" en Imágenes</li>
+</ol>
+<p>
+Para las gráficas, se aplica un resplandor rojo intenso en el
+estado <code>hover</code> para resaltarlas sobre el fondo oscuro.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-css"><span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Glow rojo intenso para las im&#225;genes</span><span style="font-weight: bold; font-style: italic;"> */</span>
+<span style="font-weight: bold;">img:hover</span> {
+  <span style="font-weight: bold;">border-color</span>: <span style="color: #ffffff; background-color: #ff0000;">#ff0000</span>;
+  <span style="font-weight: bold;">box-shadow</span>: 0 0 100px 30px <span style="color: #ffffff; background-color: #ff0000;">rgba(255, 0, 0, 0.45)</span>;
+  <span style="font-weight: bold;">transform</span>: scale(1.03);
+}
+</pre>
+</div>
+
+<ol class="org-ol">
+<li value="7">Su código debe estar respaldado en GitHub/BitBucket, la dirección será remitida en la contestación de la tarea.</li>
 </ol>
 <div class="org-src-container">
 <pre class="src src-shell"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Navegar al directorio del proyecto
 </span><span style="font-weight: bold;">cd</span> /home/alejandro/PortoviejoWeather
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Configurar Identidad en Git (Para que sepas qui&#233;n eres)
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Configurar Identidad en Git.
 </span>git config --global user.name <span style="font-style: italic;">"Alejandro Navarrete"</span>
 git config --global user.email <span style="font-style: italic;">"dennis.navarrete@epn.edu.ec"</span>
 <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Inicializar repositorio (si no existe)
@@ -497,10 +587,9 @@ git config --global user.email <span style="font-style: italic;">"dennis.navarre
 </span>git branch -M main
 <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">5. A&#241;adir archivos y realizar commit
 </span>git add .
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">El '|| true' es para que no se detenga si ya guardaste todo antes
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">El '|| true' para evitar detenciones si ya se realiz&#243; el proceso anteriormente.
 </span>git commit -m <span style="font-style: italic;">"Entrega Final: Proyecto PortoviejoWeather"</span> || <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Nada nuevo que guardar"</span>
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">6. Configurar el remoto con TU USUARIO (dannstrak)
-</span><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Primero borramos cualquier remoto viejo para evitar errores
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">6. Configurar GitHub
 </span>git remote remove origin || true
 git remote add origin https://github.com/dannstrak/PortoviejoWeather.git
 <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">7. Subir a GitHub
@@ -515,57 +604,251 @@ git remote add origin https://github.com/dannstrak/PortoviejoWeather.git
 </div>
 </div>
 
-
-<div id="outline-container-org2a78e4b" class="outline-3">
-<h3 id="org2a78e4b"><span class="section-number-3">1.3.</span> Descripción del código</h3>
+<div id="outline-container-org54f6b33" class="outline-3">
+<h3 id="org54f6b33"><span class="section-number-3">1.3.</span> Descripción del código</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-En esta sección se debe detallar segmentos importantes del código
-desarrollado así como la <b><b>estrategia de solución</b></b> adoptada por el
-grupo para resolver el problema. Divida su código en unidades
-funcionales para facilitar su presentación y exposición.
+A continuación se detalla el funcionamiento del script principal
+<code>main.py</code>.
+Estrategia de Solución
+La estrategia adoptada para resolver el problema de monitoreo
+climático en Portoviejo se basa en la implementación de una
+arquitectura de <b><b>Pipeline de Datos Automatizado</b></b>.
+Esta solución se divide en tres capas lógicas.
 </p>
 
 <p>
-Lectura del API
+A continuación se detallan los pilares de esta estrategia:
 </p>
+
+<ol class="org-ol">
+<li>Arquitectura ETL (Extract, Transform, Load)</li>
+</ol>
+<p>
+Para garantizar un flujo de datos constante sin intervención manual, se diseñó un proceso ETL ligero utilizando Python:
+</p>
+<ul class="org-ul">
+<li><b><b>Extracción (Extract):</b></b> Se consume la API de OpenWeatherMap cada
+15 minutos. Se eligió esta frecuencia para obtener una granularidad
+suficiente que permita observar micro-variaciones en la temperatura
+y humedad sin exceder la cuota gratuita de la API.</li>
+<li><b><b>Transformación (Transform):</b></b> Los datos crudos en formato JSON
+(anidados) se normalizan a una estructura tabular plana. Se realiza
+una conversión de zona horaria (UTC a UTC-5) para que los datos sean relevantes.</li>
+<li><b><b>Carga (Load):</b></b> Se utiliza un mecanismo de almacenamiento
+incremental (<code>append mode</code>) en un archivo CSV. Esto evita la
+necesidad de una base de datos compleja (como SQL) para este volumen
+de datos, manteniendo el proyecto portable y ligero.</li>
+
+<li id="2">Automatización mediante Cron Jobs</li>
+</ul>
+<p>
+La fiabilidad del sistema depende de su ejecución autónoma. Se
+implementó una tarea programada en el sistema operativo Linux
+(usando <code>crontab</code>) que ejecuta el script <code>main.py</code> estrictamente cada
+15 minutos.
+Esto asegura que la serie temporal no tenga "huecos" significativos y
+que el
+dataset crezca orgánicamente las 24 horas del día.
+</p>
+
+<ol class="org-ol">
+<li value="3">Generación de Reportes Estáticos (Dataflow Visual)</li>
+</ol>
+<p>
+Para la capa de presentación, se descartó el uso de dashboards
+dinámicos pesados (como PowerBI o Grafana) en favor de un enfoque de
+<b><b>Sitio Web Estático</b></b>
+generado con Emacs Org-mode.
+La estrategia consiste en:
+</p>
+<ol class="org-ol">
+<li>Utilizar <b><b>Matplotlib</b></b> para generar gráficas estáticas actualizadas basadas en el histórico del CSV.</li>
+<li>Incrustar estas imágenes automáticamente en un documento principal (.org).</li>
+<li>Compilar el documento a HTML/CSS  para su publicación web.</li>
+
+<li>Importación de Librerías</li>
+</ol>
+<p>
+Se inicia importando los módulos necesarios: <code>requests</code> para la
+comunicación HTTP con la API, <code>pandas</code> para la
+estructuración de datos, y librerías del sistema para manejo de fechas y archivos.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">adder</span>(a,b):
-    <span style="font-weight: bold;">return</span> a+b
-<span style="font-weight: bold;">print</span>(adder(5,3))
+<pre class="src src-python"><span style="font-weight: bold;">import</span> requests
+<span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
+<span style="font-weight: bold;">from</span> datetime <span style="font-weight: bold;">import</span> datetime
+<span style="font-weight: bold;">import</span> os
 </pre>
 </div>
 
+<ul class="org-ul">
+<li>Configuración Inicial y Constantes</li>
+</ul>
 <p>
-Puede tener que borrar los dos puntos para que el resultado aparezca
-en el HTML. En mi caso no fue necesario. Pruebe.
+Se definen las constantes globales que controlan la ejecución: la
+credencial de acceso (API Key), las coordenadas
+geográficas de Portoviejo y la ruta donde se almacenará el historial climático.
 </p>
-<pre class="example">
-8
-</pre>
 
-
-<p>
-Convertir <i>Json</i> a <i>Diccionario</i> de Python
-</p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">print</span>(adder(8,8))
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Configuraci&#243;n inicial.
+</span><span style="font-weight: bold; font-style: italic;">API_KEY</span> = <span style="font-style: italic;">"bd5cf379b6d6b7d080073db8791dd9eb"</span>
+<span style="font-weight: bold; font-style: italic;">LAT</span> = <span style="font-style: italic;">"-1.0546"</span>
+<span style="font-weight: bold; font-style: italic;">LON</span> = <span style="font-style: italic;">"-80.4544"</span>
+<span style="font-weight: bold; font-style: italic;">URL</span> = f<span style="font-style: italic;">"https://api.openweathermap.org/data/2.5/weather?lat=</span>{LAT}<span style="font-style: italic;">&amp;lon=</span>{LON}<span style="font-style: italic;">&amp;appid=</span>{API_KEY}<span style="font-style: italic;">&amp;units=metric"</span>
+<span style="font-weight: bold; font-style: italic;">CSV_PATH</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
 </pre>
 </div>
 
-
+<ul class="org-ul">
+<li>Definición del Esquema del CSV</li>
+</ul>
 <p>
-Guardar el archivo csv
+Para garantizar la consistencia de los datos a largo plazo, se define
+una lista estricta de columnas (<code>EXPECTED_COLUMNS</code>).
+Esto actúa como un molde para asegurar que el CSV siempre tenga la misma estructura.
 </p>
+
 <div class="org-src-container">
-<pre class="src src-python"><span style="font-weight: bold;">print</span>(adder(8,-18))
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Configuraci&#243;n para el CSV.
+</span><span style="font-weight: bold; font-style: italic;">EXPECTED_COLUMNS</span> = [
+    <span style="font-style: italic;">'dt'</span>, <span style="font-style: italic;">'coord_lon'</span>, <span style="font-style: italic;">'coord_lat'</span>, <span style="font-style: italic;">'weather_0_id'</span>, <span style="font-style: italic;">'weather_0_main'</span>, 
+    <span style="font-style: italic;">'weather_0_description'</span>, <span style="font-style: italic;">'weather_0_icon'</span>, <span style="font-style: italic;">'base'</span>, <span style="font-style: italic;">'main_temp'</span>, 
+    <span style="font-style: italic;">'main_feels_like'</span>, <span style="font-style: italic;">'main_temp_min'</span>, <span style="font-style: italic;">'main_temp_max'</span>, <span style="font-style: italic;">'main_pressure'</span>, 
+    <span style="font-style: italic;">'main_humidity'</span>, <span style="font-style: italic;">'main_sea_level'</span>, <span style="font-style: italic;">'main_grnd_level'</span>, <span style="font-style: italic;">'visibility'</span>, 
+    <span style="font-style: italic;">'wind_speed'</span>, <span style="font-style: italic;">'wind_deg'</span>, <span style="font-style: italic;">'wind_gust'</span>, <span style="font-style: italic;">'clouds_all'</span>, <span style="font-style: italic;">'sys_type'</span>, 
+    <span style="font-style: italic;">'sys_id'</span>, <span style="font-style: italic;">'sys_country'</span>, <span style="font-style: italic;">'sys_sunrise'</span>, <span style="font-style: italic;">'sys_sunset'</span>, <span style="font-style: italic;">'timezone'</span>, 
+    <span style="font-style: italic;">'id'</span>, <span style="font-style: italic;">'name'</span>, <span style="font-style: italic;">'cod'</span>
+]
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Petición al Servidor</li>
+</ul>
+<p>
+La función principal comienza realizando una petición <code>GET</code> a la URL
+configurada. Se valida que el código de estado sea 200 (OK) antes de proceder.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Funciones necesarias.
+</span><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">get_weather</span>():
+    <span style="font-weight: bold;">try</span>:
+        <span style="font-weight: bold; font-style: italic;">response</span> = requests.get(URL)
+        <span style="font-weight: bold;">if</span> response.status_code == 200:
+            <span style="font-weight: bold; font-style: italic;">data</span> = response.json()
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Procesamiento de Datos Anidados</li>
+</ul>
+<p>
+La API devuelve la información del clima dentro de una lista bajo la
+clave <code>'weather'</code>. Este segmento extrae el primer elemento de esa
+lista y lo aplana dentro del diccionario principal para evitar problemas al convertirlo a tabla.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Sacar 'weather' de la lista
+</span><span style="font-weight: bold;">if</span> <span style="font-style: italic;">'weather'</span> <span style="font-weight: bold;">in</span> data <span style="font-weight: bold;">and</span> <span style="font-weight: bold;">len</span>(data[<span style="font-style: italic;">'weather'</span>]) &gt; 0:
+    <span style="font-weight: bold; font-style: italic;">w</span> = data.pop(<span style="font-style: italic;">'weather'</span>)[0]
+    <span style="font-weight: bold;">for</span> k, v <span style="font-weight: bold;">in</span> w.items():
+        <span style="font-weight: bold; font-style: italic;">data</span>[f<span style="font-style: italic;">"weather_0_</span>{k}<span style="font-style: italic;">"</span>] = v
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Normalización a DataFrame</li>
+</ul>
+<p>
+Utilizamos la función <code>json_normalize</code> de Pandas para convertir el
+objeto JSON (diccionario) en una
+fila de datos tabular plana, usando el guion bajo como separador.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Aplanar JSON
+</span><span style="font-weight: bold; font-style: italic;">df</span> = pd.json_normalize(data, sep=<span style="font-style: italic;">'_'</span>)
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Conversión de Zona Horaria</li>
+</ul>
+<p>
+Los tiempos recibidos están en formato UNIX (segundos). En este bloque
+se convierten a formato <code>datetime</code> legible y se restan 5 horas (<code>Timedelta(hours=5)</code>) para ajustar los datos a la hora local de Ecuador.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Convertir fechas
+</span><span style="font-weight: bold;">for</span> col <span style="font-weight: bold;">in</span> [<span style="font-style: italic;">'dt'</span>, <span style="font-style: italic;">'sys_sunrise'</span>, <span style="font-style: italic;">'sys_sunset'</span>]:
+    <span style="font-weight: bold;">if</span> col <span style="font-weight: bold;">in</span> df.columns:
+        <span style="font-weight: bold; font-style: italic;">df</span>[col] = pd.to_datetime(df[col], unit=<span style="font-style: italic;">'s'</span>) - pd.Timedelta(hours=5)
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Validación de Columnas</li>
+</ul>
+<p>
+Se fuerza al DataFrame a cumplir con el esquema definido en el paso 3
+mediante <code>reindex</code>. Esto previene errores si la API llegara a omitir algún campo opcional (como <code>wind_gust</code>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. Forzar columnas exactas
+</span><span style="font-weight: bold; font-style: italic;">df</span> = df.reindex(columns=EXPECTED_COLUMNS)
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Persistencia en Disco (Append)</li>
+</ul>
+<p>
+Esta lógica maneja el almacenamiento. Si el archivo no existe, lo crea
+con encabezados. Si ya existe, simplemente anexa la nueva fila al final (<code>mode</code>'a'=) sin duplicar la cabecera.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">5. Guardar en CSV
+</span><span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> os.path.isfile(CSV_PATH):
+    df.to_csv(CSV_PATH, index=<span style="font-weight: bold; text-decoration: underline;">False</span>, header=<span style="font-weight: bold; text-decoration: underline;">True</span>)
+<span style="font-weight: bold;">else</span>:
+    df.to_csv(CSV_PATH, mode=<span style="font-style: italic;">'a'</span>, index=<span style="font-weight: bold; text-decoration: underline;">False</span>, header=<span style="font-weight: bold; text-decoration: underline;">False</span>)
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Impresi&#243;n de registros.
+</span><span style="font-weight: bold; font-style: italic;">fecha_actual</span> = df[<span style="font-style: italic;">'dt'</span>].iloc[0]
+<span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"&#201;xito: Dato registrado para Portoviejo a las </span>{fecha_actual}<span style="font-style: italic;">"</span>)
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Manejo de Errores y Ejecución</li>
+</ul>
+<p>
+Finalmente, se cierran los bloques condicionales manejando errores de conexión o excepciones generales, y se define el punto de entrada del script.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">        <span style="font-weight: bold;">else</span>:
+            <span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"Error API: </span>{response.status_code}<span style="font-style: italic;">"</span>)
+    <span style="font-weight: bold;">except</span> <span style="font-weight: bold; text-decoration: underline;">Exception</span> <span style="font-weight: bold;">as</span> e:
+        <span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"Error: </span>{e}<span style="font-style: italic;">"</span>)
+
+<span style="font-weight: bold;">if</span> <span style="font-weight: bold;">__name__</span> == <span style="font-style: italic;">"__main__"</span>:
+    get_weather()
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcbd10e0" class="outline-3">
-<h3 id="orgcbd10e0"><span class="section-number-3">1.4.</span> Script ejecutable sh</h3>
+<div id="outline-container-orgb713610" class="outline-3">
+<h3 id="orgb713610"><span class="section-number-3">1.4.</span> Script ejecutable sh</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Se coloca el contenido del script ejecutable. Recuerde que se debe
@@ -615,7 +898,6 @@ condiciones de su máquina):
 conda activate iccd332
 <span style="font-weight: bold;">cd</span> /home/alejandro/PortoviejoWeather
 python main.py
-
 </pre>
 </div>
 
@@ -629,8 +911,8 @@ Finalmente convierta en ejecutable como se explicó en clases y laboratorio.
 </div>
 </div>
 
-<div id="outline-container-org7de1889" class="outline-3">
-<h3 id="org7de1889"><span class="section-number-3">1.5.</span> Configuración de Crontab</h3>
+<div id="outline-container-orgeec0b6c" class="outline-3">
+<h3 id="orgeec0b6c"><span class="section-number-3">1.5.</span> Configuración de Crontab</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 Se indica la configuración realizada en crontab para la adquisición de datos
@@ -650,8 +932,10 @@ del programa como los errores en la ejecución.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf9c09f0" class="outline-2">
-<h2 id="orgf9c09f0"><span class="section-number-2">2.</span> Presentación de resultados</h2>
+
+
+<div id="outline-container-org6d3ef18" class="outline-2">
+<h2 id="org6d3ef18"><span class="section-number-2">2.</span> Presentación de resultados</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Para la pressentación de resultados se utilizan las librerías de Python:
@@ -670,14 +954,13 @@ necesario que realice la instalación de los paquetes usando <code>mamba
 install &lt;nombre-paquete&gt;</code>
 </p>
 </div>
-<div id="outline-container-org0c8d56c" class="outline-3">
-<h3 id="org0c8d56c"><span class="section-number-3">2.1.</span> Muestra Aleatoria de datos</h3>
+
+
+<div id="outline-container-orgee27d4f" class="outline-3">
+<h3 id="orgee27d4f"><span class="section-number-3">2.1.</span> Muestra Aleatoria de datos</h3>
 <div class="outline-text-3" id="text-2-1">
-<p>
-Presentar una muestra de 10 valores aleatorios de los datos obtenidos.
-</p>
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listado de programa 1 </span>Lectura de archivo csv</label><pre class="src src-python"><span style="font-weight: bold;">import</span> os
+<pre class="src src-python"><span style="font-weight: bold;">import</span> os
 <span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
 <span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(<span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>)
 <span style="font-weight: bold;">print</span>(f<span style="font-style: italic;">"Dataset cargado. Filas: </span>{df.shape[0]}<span style="font-style: italic;">, Columnas: </span>{df.shape[1]}<span style="font-style: italic;">"</span>)
@@ -685,12 +968,12 @@ Presentar una muestra de 10 valores aleatorios de los datos obtenidos.
 </div>
 
 <pre class="example">
-Dataset cargado. Filas: 19, Columnas: 30
+Dataset cargado. Filas: 27, Columnas: 30
 </pre>
 
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listado de programa 2 </span>Despliegue de datos aleatorios</label><pre class="src src-python"><span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
+<pre class="src src-python"><span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
 <span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(<span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>)
 <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Tomamos la muestra
 </span><span style="font-weight: bold; font-style: italic;">n</span> = <span style="font-weight: bold;">min</span>(10, <span style="font-weight: bold;">len</span>(df))
@@ -720,7 +1003,7 @@ table
 
 <col  class="org-left" />
 
-<col  class="org-left" />
+<col  class="org-right" />
 
 <col  class="org-left" />
 
@@ -776,7 +1059,7 @@ table
 <th scope="col" class="org-right">weather<sub>0</sub><sub>id</sub></th>
 <th scope="col" class="org-left">weather<sub>0</sub><sub>main</sub></th>
 <th scope="col" class="org-left">weather<sub>0</sub><sub>description</sub></th>
-<th scope="col" class="org-left">weather<sub>0</sub><sub>icon</sub></th>
+<th scope="col" class="org-right">weather<sub>0</sub><sub>icon</sub></th>
 <th scope="col" class="org-left">base</th>
 <th scope="col" class="org-right">main<sub>temp</sub></th>
 <th scope="col" class="org-right">main<sub>feels</sub><sub>like</sub></th>
@@ -804,13 +1087,112 @@ table
 </thead>
 <tbody>
 <tr>
+<td class="org-left">2026-01-18 11:15:06</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.86</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1011</td>
+<td class="org-right">86</td>
+<td class="org-right">1011</td>
+<td class="org-right">1006</td>
+<td class="org-right">10000</td>
+<td class="org-right">0.59</td>
+<td class="org-right">222</td>
+<td class="org-right">1.0</td>
+<td class="org-right">100</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-18 12:00:05</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.51</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1010</td>
+<td class="org-right">82</td>
+<td class="org-right">1010</td>
+<td class="org-right">1005</td>
+<td class="org-right">10000</td>
+<td class="org-right">1.01</td>
+<td class="org-right">250</td>
+<td class="org-right">1.26</td>
+<td class="org-right">100</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-18 11:30:05</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.51</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1010</td>
+<td class="org-right">82</td>
+<td class="org-right">1010</td>
+<td class="org-right">1005</td>
+<td class="org-right">10000</td>
+<td class="org-right">1.01</td>
+<td class="org-right">250</td>
+<td class="org-right">1.26</td>
+<td class="org-right">100</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
 <td class="org-left">2026-01-18 10:30:05</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">804</td>
 <td class="org-left">Clouds</td>
 <td class="org-left">overcast clouds</td>
-<td class="org-left">04d</td>
+<td class="org-right">04d</td>
 <td class="org-left">stations</td>
 <td class="org-right">23.73</td>
 <td class="org-right">24.4</td>
@@ -837,211 +1219,13 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-17 23:45:03</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">24.92</td>
-<td class="org-right">25.53</td>
-<td class="org-right">24.92</td>
-<td class="org-right">24.92</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
-<td class="org-right">10000</td>
-<td class="org-right">2.07</td>
-<td class="org-right">273</td>
-<td class="org-right">3.17</td>
-<td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-17 06:26:34</td>
-<td class="org-left">2026-01-17 18:36:52</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-18 08:30:04</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">500</td>
-<td class="org-left">Rain</td>
-<td class="org-left">light rain</td>
-<td class="org-left">10d</td>
-<td class="org-left">stations</td>
-<td class="org-right">24.82</td>
-<td class="org-right">25.71</td>
-<td class="org-right">24.82</td>
-<td class="org-right">24.82</td>
-<td class="org-right">1011</td>
-<td class="org-right">90</td>
-<td class="org-right">1011</td>
-<td class="org-right">1006</td>
-<td class="org-right">10000</td>
-<td class="org-right">0.89</td>
-<td class="org-right">212</td>
-<td class="org-right">1.52</td>
-<td class="org-right">100</td>
-<td class="org-right">1.0</td>
-<td class="org-right">8552.0</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-18 06:26:55</td>
-<td class="org-left">2026-01-18 18:37:10</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-18 10:00:04</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">500</td>
-<td class="org-left">Rain</td>
-<td class="org-left">light rain</td>
-<td class="org-left">10d</td>
-<td class="org-left">stations</td>
-<td class="org-right">23.49</td>
-<td class="org-right">24.19</td>
-<td class="org-right">23.49</td>
-<td class="org-right">23.49</td>
-<td class="org-right">1011</td>
-<td class="org-right">88</td>
-<td class="org-right">1011</td>
-<td class="org-right">1006</td>
-<td class="org-right">10000</td>
-<td class="org-right">0.89</td>
-<td class="org-right">227</td>
-<td class="org-right">1.35</td>
-<td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-18 06:26:55</td>
-<td class="org-left">2026-01-18 18:37:10</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-17 23:30:02</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">24.92</td>
-<td class="org-right">25.53</td>
-<td class="org-right">24.92</td>
-<td class="org-right">24.92</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
-<td class="org-right">10000</td>
-<td class="org-right">2.07</td>
-<td class="org-right">273</td>
-<td class="org-right">3.17</td>
-<td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-17 06:26:34</td>
-<td class="org-left">2026-01-17 18:36:52</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-17 22:41:05</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">24.82</td>
-<td class="org-right">25.45</td>
-<td class="org-right">24.82</td>
-<td class="org-right">24.82</td>
-<td class="org-right">1010</td>
-<td class="org-right">80</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
-<td class="org-right">10000</td>
-<td class="org-right">1.88</td>
-<td class="org-right">278</td>
-<td class="org-right">2.84</td>
-<td class="org-right">100</td>
-<td class="org-right">1.0</td>
-<td class="org-right">8552.0</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-17 06:26:34</td>
-<td class="org-left">2026-01-17 18:36:52</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-17 22:53:32</td>
-<td class="org-right">-80.4477</td>
-<td class="org-right">-1.0516</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">24.33</td>
-<td class="org-right">24.91</td>
-<td class="org-right">24.33</td>
-<td class="org-right">24.33</td>
-<td class="org-right">1010</td>
-<td class="org-right">80</td>
-<td class="org-right">1010</td>
-<td class="org-right">997</td>
-<td class="org-right">10000</td>
-<td class="org-right">1.87</td>
-<td class="org-right">279</td>
-<td class="org-right">2.87</td>
-<td class="org-right">100</td>
-<td class="org-right">1.0</td>
-<td class="org-right">8552.0</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-17 06:26:33</td>
-<td class="org-left">2026-01-17 18:36:50</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
 <td class="org-left">2026-01-18 10:15:06</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">500</td>
 <td class="org-left">Rain</td>
 <td class="org-left">light rain</td>
-<td class="org-left">10d</td>
+<td class="org-right">10d</td>
 <td class="org-left">stations</td>
 <td class="org-right">23.49</td>
 <td class="org-right">24.19</td>
@@ -1068,26 +1252,59 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-18 07:45:04</td>
+<td class="org-left">2026-01-18 11:00:06</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
-<td class="org-right">501</td>
-<td class="org-left">Rain</td>
-<td class="org-left">moderate rain</td>
-<td class="org-left">10d</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
 <td class="org-left">stations</td>
-<td class="org-right">24.82</td>
-<td class="org-right">25.71</td>
-<td class="org-right">24.82</td>
-<td class="org-right">24.82</td>
+<td class="org-right">23.73</td>
+<td class="org-right">24.4</td>
+<td class="org-right">23.73</td>
+<td class="org-right">23.73</td>
 <td class="org-right">1011</td>
-<td class="org-right">90</td>
+<td class="org-right">86</td>
 <td class="org-right">1011</td>
 <td class="org-right">1006</td>
 <td class="org-right">10000</td>
-<td class="org-right">1.03</td>
+<td class="org-right">0.59</td>
 <td class="org-right">222</td>
-<td class="org-right">1.69</td>
+<td class="org-right">1.0</td>
+<td class="org-right">100</td>
+<td class="org-right">nan</td>
+<td class="org-right">nan</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-18 11:45:05</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.51</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1010</td>
+<td class="org-right">82</td>
+<td class="org-right">1010</td>
+<td class="org-right">1005</td>
+<td class="org-right">10000</td>
+<td class="org-right">1.01</td>
+<td class="org-right">250</td>
+<td class="org-right">1.26</td>
 <td class="org-right">100</td>
 <td class="org-right">1.0</td>
 <td class="org-right">8552.0</td>
@@ -1101,32 +1318,98 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-17 23:56:00</td>
-<td class="org-right">-80.4486</td>
-<td class="org-right">-1.0541</td>
+<td class="org-left">2026-01-18 13:30:03</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
 <td class="org-right">804</td>
 <td class="org-left">Clouds</td>
 <td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
+<td class="org-right">04d</td>
 <td class="org-left">stations</td>
-<td class="org-right">24.86</td>
-<td class="org-right">25.46</td>
-<td class="org-right">24.86</td>
-<td class="org-right">24.86</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1004</td>
+<td class="org-right">27.82</td>
+<td class="org-right">30.08</td>
+<td class="org-right">27.82</td>
+<td class="org-right">27.82</td>
+<td class="org-right">1007</td>
+<td class="org-right">68</td>
+<td class="org-right">1007</td>
+<td class="org-right">1003</td>
 <td class="org-right">10000</td>
-<td class="org-right">2.06</td>
-<td class="org-right">273</td>
-<td class="org-right">3.19</td>
+<td class="org-right">2.07</td>
+<td class="org-right">300</td>
+<td class="org-right">2.2</td>
+<td class="org-right">96</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-18 13:43:29</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">27.82</td>
+<td class="org-right">30.08</td>
+<td class="org-right">27.82</td>
+<td class="org-right">27.82</td>
+<td class="org-right">1007</td>
+<td class="org-right">68</td>
+<td class="org-right">1007</td>
+<td class="org-right">1003</td>
+<td class="org-right">10000</td>
+<td class="org-right">2.07</td>
+<td class="org-right">300</td>
+<td class="org-right">2.2</td>
+<td class="org-right">96</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-18 10:45:05</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">804</td>
+<td class="org-left">Clouds</td>
+<td class="org-left">overcast clouds</td>
+<td class="org-right">04d</td>
+<td class="org-left">stations</td>
+<td class="org-right">23.73</td>
+<td class="org-right">24.4</td>
+<td class="org-right">23.73</td>
+<td class="org-right">23.73</td>
+<td class="org-right">1011</td>
+<td class="org-right">86</td>
+<td class="org-right">1011</td>
+<td class="org-right">1006</td>
+<td class="org-right">10000</td>
+<td class="org-right">0.59</td>
+<td class="org-right">222</td>
+<td class="org-right">1.0</td>
 <td class="org-right">100</td>
 <td class="org-right">nan</td>
 <td class="org-right">nan</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-17 06:26:33</td>
-<td class="org-left">2026-01-17 18:36:50</td>
+<td class="org-left">2026-01-18 06:26:55</td>
+<td class="org-left">2026-01-18 18:37:10</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1134,13 +1417,14 @@ table
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
 
 
-<p>
-Realizar una gráfica de la Temperatura en el tiempo.
-</p>
-
-
+<div id="outline-container-org22532a0" class="outline-2">
+<h2 id="org22532a0"><span class="section-number-2">3.</span> Gráfica de la Temperatura en el Tiempo.</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 El siguiente cógido permite hacer la gráfica de la temperatura vs
 tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
@@ -1153,191 +1437,151 @@ tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
 <span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
 <span style="font-weight: bold;">import</span> os
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Lectura del archivo y preparaci&#243;n
-</span><span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
+<span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
 
 <span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> os.path.exists(csv_path):
     <span style="font-weight: bold;">print</span>(<span style="font-style: italic;">"Error: No existe el archivo CSV"</span>)
 <span style="font-weight: bold;">else</span>:
     <span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(csv_path)
     <span style="font-weight: bold; font-style: italic;">df</span>[<span style="font-style: italic;">'dt'</span>] = pd.to_datetime(df[<span style="font-style: italic;">'dt'</span>])
+    <span style="font-weight: bold; font-style: italic;">df</span> = df.sort_values(<span style="font-style: italic;">'dt'</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Directorio de salida (Ruta absoluta para que Python guarde el archivo)
-</span>    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
+    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
     os.makedirs(output_dir, exist_ok=<span style="font-weight: bold; text-decoration: underline;">True</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Generaci&#243;n de la Gr&#225;fica
-</span>    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(10, 6))
-    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_temp'</span>], linestyle=<span style="font-style: italic;">'-'</span>, color=<span style="font-style: italic;">'tab:blue'</span>)
+    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(12, 8))
+    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_temp'</span>], linestyle=<span style="font-style: italic;">'-'</span>, marker=<span style="font-style: italic;">'o'</span>, markersize=3, color=<span style="font-style: italic;">'tab:blue'</span>)
 
     <span style="font-weight: bold; font-style: italic;">ax</span> = plt.gca()
-    <span style="font-weight: bold; font-style: italic;">locator</span> = mdates.AutoDateLocator()
-    <span style="font-weight: bold; font-style: italic;">formatter</span> = mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>)
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">CAMBIO: Formato de fecha largo y marcas cada 15 minutos
+</span>    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
 
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
-    plt.xticks(rotation=45)
-    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>)
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">CAMBIO: Rotaci&#243;n a 45 grados y alineaci&#243;n a la derecha como en tu imagen
+</span>    plt.xticks(rotation=45, ha=<span style="font-style: italic;">'right'</span>, fontsize=9)
+    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>, linestyle=<span style="font-style: italic;">'--'</span>, alpha=0.5)
 
-    <span style="font-weight: bold; font-style: italic;">city_name</span> = df[<span style="font-style: italic;">'name'</span>].iloc[0] <span style="font-weight: bold;">if</span> <span style="font-style: italic;">'name'</span> <span style="font-weight: bold;">in</span> df.columns <span style="font-weight: bold;">else</span> <span style="font-style: italic;">"Portoviejo"</span>
-    plt.title(f<span style="font-style: italic;">'Main Temp vs Time in </span>{city_name}<span style="font-style: italic;">'</span>)
+    plt.title(f<span style="font-style: italic;">"Main Temp vs Time in </span>{df['name'].iloc[0]}<span style="font-style: italic;">"</span>)
     plt.tight_layout()
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Guardado (Usamos la ruta absoluta)
-</span>    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'temperature_style.png'</span>)
+    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'temperature_style.png'</span>)
     plt.savefig(fname)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. RETORNO (Ruta relativa: clave para que el sitio web muestre la imagen)
-</span>    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Esto es lo que aparecer&#225; en el bloque #+RESULTS:
-</span>    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/temperature_style.png"</span>
+    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/temperature_style.png"</span>
 </pre>
 </div>
 
 
-<div id="org516ab28" class="figure">
+<div id="orgcafd634" class="figure">
 <p><img src="./images/temperature_style.png" alt="temperature_style.png" />
 </p>
-<p><span class="figure-number">Figura 1: </span>Gráfica Temperatura vs Tiempo</p>
-</div>
 </div>
 </div>
 
-<div id="outline-container-org3cbb86b" class="outline-3">
-<h3 id="org3cbb86b"><span class="section-number-3">2.2.</span> Realice una gráfica de Humedad con respecto al tiempo</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org6d47f07" class="outline-3">
+<h3 id="org6d47f07"><span class="section-number-3">3.1.</span> Gráfica de Humedad con respecto al Tiempo.</h3>
+<div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
 <span style="font-weight: bold;">import</span> matplotlib.dates <span style="font-weight: bold;">as</span> mdates
 <span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
 <span style="font-weight: bold;">import</span> os
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Lectura del archivo
-</span><span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
+<span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
 
 <span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> os.path.exists(csv_path):
     <span style="font-weight: bold;">print</span>(<span style="font-style: italic;">"Error: No existe el archivo CSV"</span>)
 <span style="font-weight: bold;">else</span>:
     <span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(csv_path)
     <span style="font-weight: bold; font-style: italic;">df</span>[<span style="font-style: italic;">'dt'</span>] = pd.to_datetime(df[<span style="font-style: italic;">'dt'</span>])
+    <span style="font-weight: bold; font-style: italic;">df</span> = df.sort_values(<span style="font-style: italic;">'dt'</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Configuraci&#243;n de carpeta de im&#225;genes (Ruta absoluta para guardar)
-</span>    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
+    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
     os.makedirs(output_dir, exist_ok=<span style="font-weight: bold; text-decoration: underline;">True</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Generaci&#243;n de la Gr&#225;fica
-</span>    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(10, 6))
+    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(12, 8))
+    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_humidity'</span>], linestyle=<span style="font-style: italic;">'-'</span>, marker=<span style="font-style: italic;">'o'</span>, markersize=3, color=<span style="font-style: italic;">'tab:cyan'</span>)
 
-    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_humidity'</span>], linestyle=<span style="font-style: italic;">'-'</span>, linewidth=2, color=<span style="font-style: italic;">'tab:cyan'</span>)
+    <span style="font-weight: bold; font-style: italic;">ax</span> = plt.gca()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuraci&#243;n del eje X (Fechas)
-</span>    <span style="font-weight: bold; font-style: italic;">ax</span> = plt.gca()
-    <span style="font-weight: bold; font-style: italic;">formatter</span> = mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>)
-    <span style="font-weight: bold; font-style: italic;">locator</span> = mdates.AutoDateLocator()
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Rotaci&#243;n exacta a la de la imagen
+</span>    plt.xticks(rotation=45, ha=<span style="font-style: italic;">'right'</span>, fontsize=9)
+    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>, linestyle=<span style="font-style: italic;">'--'</span>, alpha=0.5)
 
-    plt.xticks(rotation=45, ha=<span style="font-style: italic;">'right'</span>)
-    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">T&#237;tulo
-</span>    <span style="font-weight: bold; font-style: italic;">city_name</span> = df[<span style="font-style: italic;">'name'</span>].iloc[0] <span style="font-weight: bold;">if</span> <span style="font-style: italic;">'name'</span> <span style="font-weight: bold;">in</span> df.columns <span style="font-weight: bold;">else</span> <span style="font-style: italic;">"Portoviejo"</span>
-    plt.title(f<span style="font-style: italic;">'Humidity vs Time in </span>{city_name}<span style="font-style: italic;">'</span>)
-
+    plt.title(f<span style="font-style: italic;">"Humidity vs Time in </span>{df['name'].iloc[0]}<span style="font-style: italic;">"</span>)
     plt.tight_layout()
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. Guardado (Usa la ruta absoluta definida arriba)
-</span>    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'humidity.png'</span>)
+    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'humidity.png'</span>)
     plt.savefig(fname)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">5. RETORNO (Ruta relativa para el sitio web)
-</span>    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/humidity.png"</span>
+    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/humidity.png"</span>
 </pre>
 </div>
 
-<div id="org374efd5" class="figure">
+<div id="org948d216" class="figure">
 <p><img src="./images/humidity.png" alt="humidity.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org16ab113" class="outline-3">
-<h3 id="org16ab113"><span class="section-number-3">2.3.</span> <b>Opcional</b> Presente alguna gráfica de interés.</h3>
-</div>
-<div id="outline-container-orgc0fc655" class="outline-3">
-<h3 id="orgc0fc655"><span class="section-number-3">2.4.</span> Gráfica de Presión Atmosférica (Opcional)</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-org4112e67" class="outline-3">
+<h3 id="org4112e67"><span class="section-number-3">3.2.</span> Gráfica de Presión Atmosférica.</h3>
+<div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
 <span style="font-weight: bold;">import</span> matplotlib.dates <span style="font-weight: bold;">as</span> mdates
 <span style="font-weight: bold;">import</span> pandas <span style="font-weight: bold;">as</span> pd
 <span style="font-weight: bold;">import</span> os
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Lectura del archivo
-</span><span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
+<span style="font-weight: bold; font-style: italic;">csv_path</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'</span>
 
 <span style="font-weight: bold;">if</span> <span style="font-weight: bold;">not</span> os.path.exists(csv_path):
     <span style="font-weight: bold;">print</span>(<span style="font-style: italic;">"Error: No existe el archivo CSV"</span>)
 <span style="font-weight: bold;">else</span>:
     <span style="font-weight: bold; font-style: italic;">df</span> = pd.read_csv(csv_path)
     <span style="font-weight: bold; font-style: italic;">df</span>[<span style="font-style: italic;">'dt'</span>] = pd.to_datetime(df[<span style="font-style: italic;">'dt'</span>])
+    <span style="font-weight: bold; font-style: italic;">df</span> = df.sort_values(<span style="font-style: italic;">'dt'</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Configuraci&#243;n de carpeta (Ruta absoluta para el sistema de archivos)
-</span>    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
+    <span style="font-weight: bold; font-style: italic;">output_dir</span> = <span style="font-style: italic;">'/home/alejandro/PortoviejoWeather/weather-site/content/images'</span>
     os.makedirs(output_dir, exist_ok=<span style="font-weight: bold; text-decoration: underline;">True</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Generaci&#243;n de la Gr&#225;fica
-</span>    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(10, 6))
-    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_pressure'</span>], linestyle=<span style="font-style: italic;">'-'</span>, linewidth=2, color=<span style="font-style: italic;">'tab:green'</span>)
+    <span style="font-weight: bold; font-style: italic;">fig</span> = plt.figure(figsize=(12, 8))
+    plt.plot(df[<span style="font-style: italic;">'dt'</span>], df[<span style="font-style: italic;">'main_pressure'</span>], linestyle=<span style="font-style: italic;">'-'</span>, marker=<span style="font-style: italic;">'o'</span>, markersize=3, color=<span style="font-style: italic;">'tab:green'</span>)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Configuraci&#243;n del eje X (Fechas)
-</span>    <span style="font-weight: bold; font-style: italic;">ax</span> = plt.gca()
-    <span style="font-weight: bold; font-style: italic;">formatter</span> = mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>)
-    <span style="font-weight: bold; font-style: italic;">locator</span> = mdates.AutoDateLocator()
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
+    <span style="font-weight: bold; font-style: italic;">ax</span> = plt.gca()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter(<span style="font-style: italic;">'%Y-%m-%d %H:%M:%S'</span>))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
 
-    plt.xticks(rotation=45, ha=<span style="font-style: italic;">'right'</span>)
-    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>)
+    plt.xticks(rotation=45, ha=<span style="font-style: italic;">'right'</span>, fontsize=9)
+    plt.grid(<span style="font-weight: bold; text-decoration: underline;">True</span>, linestyle=<span style="font-style: italic;">'--'</span>, alpha=0.5)
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">T&#237;tulo y etiquetas
-</span>    <span style="font-weight: bold; font-style: italic;">city_name</span> = df[<span style="font-style: italic;">'name'</span>].iloc[0] <span style="font-weight: bold;">if</span> <span style="font-style: italic;">'name'</span> <span style="font-weight: bold;">in</span> df.columns <span style="font-weight: bold;">else</span> <span style="font-style: italic;">"Portoviejo"</span>
-    plt.title(f<span style="font-style: italic;">'Pressure vs Time in </span>{city_name}<span style="font-style: italic;">'</span>)
+    plt.title(f<span style="font-style: italic;">"Pressure vs Time in </span>{df['name'].iloc[0]}<span style="font-style: italic;">"</span>)
     plt.ylabel(<span style="font-style: italic;">'Presi&#243;n (hPa)'</span>)
-
     plt.tight_layout()
 
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">4. Guardado (Usando la ruta absoluta)
-</span>    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'pressure.png'</span>)
+    <span style="font-weight: bold; font-style: italic;">fname</span> = os.path.join(output_dir, <span style="font-style: italic;">'pressure.png'</span>)
     plt.savefig(fname)
-
-    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">5. RETORNO (Ruta relativa para el sitio web)
-</span>    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Esto asegura que el HTML busque la imagen en ./images/pressure.png
-</span>    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/pressure.png"</span>
+    <span style="font-weight: bold;">return</span> <span style="font-style: italic;">"./images/pressure.png"</span>
 </pre>
 </div>
 
 
-<div id="org240a36a" class="figure">
+<div id="orgc592f8c" class="figure">
 <p><img src="./images/pressure.png" alt="pressure.png" />
 </p>
 </div>
-
-<p>
-Debido a que el archivo index.org se abre dentro de la carpeta
-<i>content</i>, y en cambio el servidor http de emacs se ejecuta desde la
-carpeta <i>public</i> es necesario copiar el archivo a la ubicación
-equivalente en <code>/public/images</code>
-</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgbb2043e" class="outline-2">
-<h2 id="orgbb2043e"><span class="section-number-2">3.</span> Sincronización y Configuración del Servidor</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgd961231" class="outline-2">
+<h2 id="orgd961231"><span class="section-number-2">4.</span> Sincronización y Configuración del Servidor</h2>
+<div class="outline-text-2" id="text-4">
 <p>
-Debido a que el archivo <code>index.org</code> utiliza rutas relativas (<code>./images/</code>) para ser compatible con la exportación web, es necesario asegurar que las imágenes generadas por Python en la carpeta <code>/content/images/</code> se copien a la carpeta <code>/public/images/</code>.
+Debido a que el archivo <code>index.org</code> utiliza rutas relativas
+(<code>./images/</code>) para ser compatible con la exportación web,
+es necesario asegurar que las imágenes generadas por Python en la carpeta <code>/content/images/</code> se copien a la carpeta <code>/public/images/</code>.
 </p>
 
 <div class="org-src-container">
@@ -1362,9 +1606,9 @@ mkdir -p <span style="font-style: italic;">"$IMG_PUBLIC"</span>
 </div>
 </div>
 
-<div id="outline-container-orga28d637" class="outline-2">
-<h2 id="orga28d637"><span class="section-number-2">4.</span> Generación del Sitio Web</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgb44bb4a" class="outline-2">
+<h2 id="orgb44bb4a"><span class="section-number-2">5.</span> Generación del Sitio Web</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 Presiona <code>C-c C-c</code> para actualizar la estructura de archivos y reconstruir el HTML con el estilo CSS moderno.
 </p>
@@ -1375,7 +1619,7 @@ Presiona <code>C-c C-c</code> para actualizar la estructura de archivos y recons
 <span style="font-weight: bold; font-style: italic;">ORIGEN</span>=<span style="font-style: italic;">"/home/alejandro/EPN-Lectures/iccd332ArqComp-2024-B/Proyectos/index.org"</span>
 <span style="font-weight: bold; font-style: italic;">DESTINO</span>=<span style="font-style: italic;">"$SITE_DIR/content/index.org"</span>
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Copiar el index.org m&#225;s reciente a la carpeta de construcci&#243;n
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Copiar el index.org m&#225;s reciente a la carpeta de content.
 </span>cp <span style="font-style: italic;">"$ORIGEN"</span> <span style="font-style: italic;">"$DESTINO"</span>
 <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Archivo index.org actualizado."</span>
 
@@ -1387,18 +1631,6 @@ chmod +x build.sh
 <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"--- PROCESO FINALIZADO: Sitio web actualizado y listo para visualizar ---"</span>
 </pre>
 </div>
-</div>
-</div>
-
-<div id="outline-container-orgda33f42" class="outline-2">
-<h2 id="orgda33f42"><span class="section-number-2">5.</span> Referencias</h2>
-<div class="outline-text-2" id="text-5">
-<ul class="org-ul">
-<li><a href="https://emacs.stackexchange.com/questions/28715/get-pandas-data-frame-as-a-table-in-org-babel">presentar dataframe como tabla en emacs org</a></li>
-<li><a href="https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html">Python Source Code Blocks in Org Mode</a></li>
-<li><a href="https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/">Systems Crafters Construir tu sitio web con Modo Emacs Org</a></li>
-<li><a href="https://www.youtube.com/watch?v=AfkrzFodoNw">Vídeo Youtube Build Your Website with Org Mode</a></li>
-</ul>
 </div>
 </div>
 <div id="footnotes">
@@ -1417,7 +1649,7 @@ de Python
 <div id="postamble" class="status">
 <p class="date">Fecha: 2024-08-07</p>
 <p class="author">Autor: Alejandro Navarrete; Samuel Crespo; Elvis Carlosama &amp; Juan Quinatoa.</p>
-<p class="date">Created: 2026-01-18 Sun 11:49</p>
+<p class="date">Created: 2026-01-20 Tue 05:39</p>
 </div>
 </body>
 </html>

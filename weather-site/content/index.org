@@ -46,7 +46,7 @@ touch weather-site/build.sh
 touch weather-site/content/index.org
 touch weather-site/content/index.org_archive
 touch weather-site/public/index.html
-# 7. Crear placeholders para imágenes (para evitar errores posteriores)
+# 7. Crear placeholders para imágenes.
 touch weather-site/content/images/plot.png
 touch weather-site/content/images/temperature.png
 touch weather-site/public/images/plot.png
@@ -107,21 +107,6 @@ tree
 9 directories, 22 files
 #+end_example
 
-Puede usar Emacs para la creación de la estructura de su proyecto
-usando comandos desde el bloque de shell. Recuerde ejecutar el bloque
-con ~C-c C-c~. Para insertar un bloque nuevo utilice ~C-c C-,~ o ~M-x
-org-insert-structure-template~. Seleccione la opción /s/ para src y
-adapte el bloque según su código tenga un comandos de shell, código de
-Python o de Java. En este documento ~.org~ dispone de varios ejemplos
-funcionales para escribir y presentar el código.
-
-#+begin_src shell :results output :exports both
-echo 'Aquí va sus comandos'
-#+end_src
-
-#+RESULTS:
-: Aquí va sus comandos
-
 ** Formulación del Problema
 Se desea realizar un registro climatológico de una ciudad
 $\mathcal{C}$. Para esto, escriba un script de Python/Java que permita
@@ -147,9 +132,9 @@ WSL. Las etapas del problema se subdividen en:
        archivo ha de contener toda la información que se obtiene del
        API en columnas. Se debe observar que los datos sobre lluvia
        (rain) y nieve (snow) se dan a veces si existe el fenómeno.
-    3. Desarrollar un ejecutable /get-weather.sh/ para ejecutar el
+    4. Desarrollar un ejecutable /get-weather.sh/ para ejecutar el
        programa Python/Java.[fn:1]
-#+begin_src python :tangle "/home/alejandro/PortoviejoWeather/main.py" :shebang "#!/usr/bin/env python" :results output :python /home/alejandro/miniforge3/envs/iccd332/bin/python
+    #+begin_src python :tangle "/home/alejandro/PortoviejoWeather/main.py" :shebang "#!/usr/bin/env python" :results output :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import requests
 import pandas as pd
 from datetime import datetime
@@ -181,20 +166,20 @@ def get_weather():
                 w = data.pop('weather')[0]
                 for k, v in w.items():
                     data[f"weather_0_{k}"] = v
-            # 2. Aplanar JSON
+                    # 2. Aplanar JSON
             df = pd.json_normalize(data, sep='_')
             # 3. Convertir fechas
             for col in ['dt', 'sys_sunrise', 'sys_sunset']:
                 if col in df.columns:
                     df[col] = pd.to_datetime(df[col], unit='s') - pd.Timedelta(hours=5)
-            # 4. Forzar columnas exactas
+                    # 4. Forzar columnas exactas
             df = df.reindex(columns=EXPECTED_COLUMNS)
             # 5. Guardar en CSV
             if not os.path.isfile(CSV_PATH):
                 df.to_csv(CSV_PATH, index=False, header=True)
             else:
                 df.to_csv(CSV_PATH, mode='a', index=False, header=False)
-            # Impresión de registros.
+                # Impresión de registros.
             fecha_actual = df['dt'].iloc[0]
             print(f"Éxito: Dato registrado para Portoviejo a las {fecha_actual}")
         else:
@@ -203,24 +188,24 @@ def get_weather():
         print(f"Error: {e}")
 if __name__ == "__main__":
     get_weather()
-#+end_src
-#+RESULTS:
-: Éxito: Dato registrado para Portoviejo a las 2026-01-18 10:30:05
+    #+end_src
+    #+RESULTS:
+    : Éxito: Dato registrado para Portoviejo a las 2026-01-18 10:30:05
 
-    4. Configurar Crontab para la adquisición de datos. Escriba el
+    5. Configurar Crontab para la adquisición de datos. Escriba el
        comando configurado. Respalde la ejecución de crontab en un
        archivo output.log
        ** Configuración de Crontab
-#+begin_src shell :results output :exports both
+    #+begin_src shell :results output :exports both
 # Comando de crontab para ejecución cada 15 minutos
 # */15 * * * * /home/alejandro/miniforge3/envs/iccd332/bin/python /home/alejandro/PortoviejoWeather/main.py >> /home/alejandro/PortoviejoWeather/output.log 2>&1
 echo "Crontab configurado correctamente para ejecución cada 15 minutos."
-#+end_src
+    #+end_src
 
-#+RESULTS:
-: Crontab configurado correctamente para ejecución cada 15 minutos.
+    #+RESULTS:
+    : Crontab configurado correctamente para ejecución cada 15 minutos.
 
-    5. Realizar la presentación del Trabajo utilizando la generación
+    5. [@5] Realizar la presentación del Trabajo utilizando la generación
        del sitio web por medio de Emacs. Para esto es necesario crear
        la carpeta **weather-site** dentro del proyecto. Puede ajustar el
        /look and feel/ según sus preferencias. El servidor a usar es
@@ -230,23 +215,64 @@ echo "Crontab configurado correctamente para ejecución cada 15 minutos."
          simple-httpd
        - Configurando el archivo init.el
 
-       #+begin_src elisp
-         (use-package simple-httpd
-            :ensure t)
-       #+end_src
+    #+begin_src elisp
+(use-package simple-httpd
+:ensure t)
+    #+end_src
 
-       #+RESULTS:
+    6. [@6] Detalles de cambios del archivo Build.el
+    Se detallan los estilos específicos inyectados para lograr la estética visual del sitio.
 
-       Instrucciones de sobre la creación del sitio web se tiene en el
-       vídeo de instrucciones y en el archivo [[https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Tutoriales/Org-Website/Org-Website.org][Org-Website.org]] en el
-       GitHub del curso
+    1. [@1] Colores Base y Márgenes
+    Se define el fondo negro absoluto para el modo "Ultra-Dark" y se
+    establece el margen izquierdo vital para que el
+    contenido no quede oculto bajo la barra lateral.
 
-    6. Su código debe estar respaldado en GitHub/BitBucket, la
-       dirección será remitida en la contestación de la tarea.
-#+begin_src shell :results output :exports both :eval no
+    #+begin_src css :results none :exports code
+    /* Fondo negro y texto blanco */
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+    /* Desplazamiento para respetar la Sidebar fija */
+#content {
+  margin-left: 320px;
+  max-width: 900px;
+}
+    #+end_src
+
+    2. [@2] Efecto "Glow" en Código
+    Este es el estilo que hace que los bloques de código brillen al pasar
+    el mouse. Se utiliza una
+    sombra de caja difusa (=box-shadow=) blanca.
+
+    #+begin_src css :results none :exports code
+    /* Glow blanco al pasar el cursor sobre el código */
+pre.src:hover {
+  border-color: #ffffff;
+  box-shadow: 0 0 80px 20px rgba(255, 255, 255, 0.25);
+  transform: translateY(-5px);
+}
+    #+end_src
+
+    3. [@3] Efecto "Neon" en Imágenes
+    Para las gráficas, se aplica un resplandor rojo intenso en el
+    estado =hover= para resaltarlas sobre el fondo oscuro.
+
+   #+begin_src css :results none :exports code
+/* Glow rojo intenso para las imágenes */
+img:hover {
+  border-color: #ff0000;
+  box-shadow: 0 0 100px 30px rgba(255, 0, 0, 0.45);
+  transform: scale(1.03);
+}
+   #+end_src
+       
+   7. [@7] Su código debe estar respaldado en GitHub/BitBucket, la dirección será remitida en la contestación de la tarea.
+   #+begin_src shell :results output :exports both :eval no
 # 1. Navegar al directorio del proyecto
 cd /home/alejandro/PortoviejoWeather
-# 2. Configurar Identidad en Git (Para que sepas quién eres)
+# 2. Configurar Identidad en Git.
 git config --global user.name "Alejandro Navarrete"
 git config --global user.email "dennis.navarrete@epn.edu.ec"
 # 3. Inicializar repositorio (si no existe)
@@ -258,55 +284,191 @@ fi
 git branch -M main
 # 5. Añadir archivos y realizar commit
 git add .
-# El '|| true' es para que no se detenga si ya guardaste todo antes
+# El '|| true' para evitar detenciones si ya se realizó el proceso anteriormente.
 git commit -m "Entrega Final: Proyecto PortoviejoWeather" || echo "Nada nuevo que guardar"
-# 6. Configurar el remoto con TU USUARIO (dannstrak)
-# Primero borramos cualquier remoto viejo para evitar errores
+# 6. Configurar GitHub
 git remote remove origin || true
 git remote add origin https://github.com/dannstrak/PortoviejoWeather.git
 # 7. Subir a GitHub
 git push -u origin main
-#+end_src
+   #+end_src
 
-#+RESULTS:
+   #+RESULTS:
 : [main ba1d222] Entrega Final: Proyecto PortoviejoWeather
 :  2 files changed, 2 insertions(+)
-
-    
+  
 ** Descripción del código
-En esta sección se debe detallar segmentos importantes del código
-desarrollado así como la **estrategia de solución** adoptada por el
-grupo para resolver el problema. Divida su código en unidades
-funcionales para facilitar su presentación y exposición.
+A continuación se detalla el funcionamiento del script principal
+=main.py=.
+Estrategia de Solución
+La estrategia adoptada para resolver el problema de monitoreo
+climático en Portoviejo se basa en la implementación de una
+arquitectura de **Pipeline de Datos Automatizado**.
+Esta solución se divide en tres capas lógicas.
 
-Lectura del API
-#+begin_src python :session :results output exports both
-def adder(a,b):
-    return a+b
-print(adder(5,3))
+A continuación se detallan los pilares de esta estrategia:
+
+1. Arquitectura ETL (Extract, Transform, Load)
+Para garantizar un flujo de datos constante sin intervención manual, se diseñó un proceso ETL ligero utilizando Python:
+- **Extracción (Extract):** Se consume la API de OpenWeatherMap cada
+  15 minutos. Se eligió esta frecuencia para obtener una granularidad
+  suficiente que permita observar micro-variaciones en la temperatura
+  y humedad sin exceder la cuota gratuita de la API.
+- **Transformación (Transform):** Los datos crudos en formato JSON
+  (anidados) se normalizan a una estructura tabular plana. Se realiza
+  una conversión de zona horaria (UTC a UTC-5) para que los datos sean relevantes.
+- **Carga (Load):** Se utiliza un mecanismo de almacenamiento
+  incremental (=append mode=) en un archivo CSV. Esto evita la
+  necesidad de una base de datos compleja (como SQL) para este volumen
+  de datos, manteniendo el proyecto portable y ligero.
+
+2. [@2] Automatización mediante Cron Jobs
+La fiabilidad del sistema depende de su ejecución autónoma. Se
+implementó una tarea programada en el sistema operativo Linux
+(usando =crontab=) que ejecuta el script =main.py= estrictamente cada
+15 minutos.
+Esto asegura que la serie temporal no tenga "huecos" significativos y
+que el
+dataset crezca orgánicamente las 24 horas del día.
+
+3. [@3] Generación de Reportes Estáticos (Dataflow Visual)
+Para la capa de presentación, se descartó el uso de dashboards
+dinámicos pesados (como PowerBI o Grafana) en favor de un enfoque de
+**Sitio Web Estático**
+generado con Emacs Org-mode.
+La estrategia consiste en:
+1.  Utilizar **Matplotlib** para generar gráficas estáticas actualizadas basadas en el histórico del CSV.
+2.  Incrustar estas imágenes automáticamente en un documento principal (.org).
+3.  Compilar el documento a HTML/CSS  para su publicación web.
+
+- Importación de Librerías
+Se inicia importando los módulos necesarios: =requests= para la
+comunicación HTTP con la API, =pandas= para la
+estructuración de datos, y librerías del sistema para manejo de fechas y archivos.
+
+#+begin_src python :results none :exports code
+import requests
+import pandas as pd
+from datetime import datetime
+import os
 #+end_src
 
-Puede tener que borrar los dos puntos para que el resultado aparezca
-en el HTML. En mi caso no fue necesario. Pruebe.
-#+RESULTS:
-: 8
+- Configuración Inicial y Constantes
+Se definen las constantes globales que controlan la ejecución: la
+credencial de acceso (API Key), las coordenadas
+geográficas de Portoviejo y la ruta donde se almacenará el historial climático.
 
-Convertir /Json/ a /Diccionario/ de Python
-#+begin_src python :session :results output exports both
-print(adder(8,8))
+#+begin_src python :results none :exports code
+# 1. Configuración inicial.
+API_KEY = "bd5cf379b6d6b7d080073db8791dd9eb"
+LAT = "-1.0546"
+LON = "-80.4544"
+URL = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&appid={API_KEY}&units=metric"
+CSV_PATH = '/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'
 #+end_src
 
-#+RESULTS:
-: 16
+- Definición del Esquema del CSV
+Para garantizar la consistencia de los datos a largo plazo, se define
+una lista estricta de columnas (=EXPECTED_COLUMNS=).
+Esto actúa como un molde para asegurar que el CSV siempre tenga la misma estructura.
 
-
-Guardar el archivo csv
-#+begin_src python :session :results output exports both
-print(adder(8,-18))
+#+begin_src python :results none :exports code
+# 2. Configuración para el CSV.
+EXPECTED_COLUMNS = [
+    'dt', 'coord_lon', 'coord_lat', 'weather_0_id', 'weather_0_main', 
+    'weather_0_description', 'weather_0_icon', 'base', 'main_temp', 
+    'main_feels_like', 'main_temp_min', 'main_temp_max', 'main_pressure', 
+    'main_humidity', 'main_sea_level', 'main_grnd_level', 'visibility', 
+    'wind_speed', 'wind_deg', 'wind_gust', 'clouds_all', 'sys_type', 
+    'sys_id', 'sys_country', 'sys_sunrise', 'sys_sunset', 'timezone', 
+    'id', 'name', 'cod'
+]
 #+end_src
 
-#+RESULTS:
-: -10
+- Petición al Servidor
+La función principal comienza realizando una petición =GET= a la URL
+configurada. Se valida que el código de estado sea 200 (OK) antes de proceder.
+
+#+begin_src python :results none :exports code
+# 3. Funciones necesarias.
+def get_weather():
+    try:
+        response = requests.get(URL)
+        if response.status_code == 200:
+            data = response.json()
+#+end_src
+
+- Procesamiento de Datos Anidados
+La API devuelve la información del clima dentro de una lista bajo la
+clave ='weather'=. Este segmento extrae el primer elemento de esa
+lista y lo aplana dentro del diccionario principal para evitar problemas al convertirlo a tabla.
+
+#+begin_src python :results none :exports code
+            # 1. Sacar 'weather' de la lista
+            if 'weather' in data and len(data['weather']) > 0:
+                w = data.pop('weather')[0]
+                for k, v in w.items():
+                    data[f"weather_0_{k}"] = v
+#+end_src
+
+- Normalización a DataFrame
+Utilizamos la función =json_normalize= de Pandas para convertir el
+objeto JSON (diccionario) en una
+fila de datos tabular plana, usando el guion bajo como separador.
+
+#+begin_src python :results none :exports code
+            # 2. Aplanar JSON
+            df = pd.json_normalize(data, sep='_')
+#+end_src
+
+- Conversión de Zona Horaria
+Los tiempos recibidos están en formato UNIX (segundos). En este bloque
+se convierten a formato =datetime= legible y se restan 5 horas (=Timedelta(hours=5)=) para ajustar los datos a la hora local de Ecuador.
+
+#+begin_src python :results none :exports code
+            # 3. Convertir fechas
+            for col in ['dt', 'sys_sunrise', 'sys_sunset']:
+                if col in df.columns:
+                    df[col] = pd.to_datetime(df[col], unit='s') - pd.Timedelta(hours=5)
+#+end_src
+
+- Validación de Columnas
+Se fuerza al DataFrame a cumplir con el esquema definido en el paso 3
+mediante =reindex=. Esto previene errores si la API llegara a omitir algún campo opcional (como =wind_gust=).
+
+#+begin_src python :results none :exports code
+            # 4. Forzar columnas exactas
+            df = df.reindex(columns=EXPECTED_COLUMNS)
+#+end_src
+
+- Persistencia en Disco (Append)
+Esta lógica maneja el almacenamiento. Si el archivo no existe, lo crea
+con encabezados. Si ya existe, simplemente anexa la nueva fila al final (=mode='a'=) sin duplicar la cabecera.
+
+#+begin_src python :results none :exports code
+            # 5. Guardar en CSV
+            if not os.path.isfile(CSV_PATH):
+                df.to_csv(CSV_PATH, index=False, header=True)
+            else:
+                df.to_csv(CSV_PATH, mode='a', index=False, header=False)
+            
+            # Impresión de registros.
+            fecha_actual = df['dt'].iloc[0]
+            print(f"Éxito: Dato registrado para Portoviejo a las {fecha_actual}")
+#+end_src
+
+- Manejo de Errores y Ejecución
+Finalmente, se cierran los bloques condicionales manejando errores de conexión o excepciones generales, y se define el punto de entrada del script.
+
+#+begin_src python :results none :exports code
+        else:
+            print(f"Error API: {response.status_code}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    get_weather()
+#+end_src
 
 ** Script ejecutable sh
 Se coloca el contenido del script ejecutable. Recuerde que se debe
@@ -343,11 +505,10 @@ eval "$(conda shell.bash hook)"
 conda activate iccd332
 cd /home/alejandro/PortoviejoWeather
 python main.py
-
 #+end_src
 
 #+RESULTS:
-: Éxito: Dato registrado para Portoviejo a las 2026-01-18 10:30:05
+: Éxito: Dato registrado para Portoviejo a las 2026-01-18 13:43:29
 
 Finalmente convierta en ejecutable como se explicó en clases y laboratorio.
 #+begin_src shell :results output :exports both
@@ -369,6 +530,8 @@ Se indica la configuración realizada en crontab para la adquisición de datos
 - Recuerde ajustar el tiempo para potenciar tomar datos nuevos
 - Recuerde que ~2>&1~ permite guardar en ~output.log~ tanto la salida
   del programa como los errores en la ejecución.
+
+  
 * Presentación de resultados
 Para la pressentación de resultados se utilizan las librerías de Python:
 - matplotlib
@@ -380,9 +543,9 @@ pueden utilizar para presentar los resultados gráficos. En ambos
 casos, para que funcione los siguientes bloques de código, es
 necesario que realice la instalación de los paquetes usando ~mamba
 install <nombre-paquete>~
+
+
 ** Muestra Aleatoria de datos
-Presentar una muestra de 10 valores aleatorios de los datos obtenidos.
-#+caption: Lectura de archivo csv
 #+begin_src python :results output :exports both :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import os
 import pandas as pd
@@ -391,9 +554,8 @@ print(f"Dataset cargado. Filas: {df.shape[0]}, Columnas: {df.shape[1]}")
 #+end_src
 
 #+RESULTS:
-: Dataset cargado. Filas: 19, Columnas: 30
+: Dataset cargado. Filas: 27, Columnas: 30
 
-#+caption: Despliegue de datos aleatorios
 #+begin_src python :results value table :exports both :return table :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import pandas as pd
 df = pd.read_csv('/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv')
@@ -411,19 +573,19 @@ table
 #+RESULTS:
 | dt                  | coord_lon | coord_lat | weather_0_id | weather_0_main | weather_0_description | weather_0_icon | base     | main_temp | main_feels_like | main_temp_min | main_temp_max | main_pressure | main_humidity | main_sea_level | main_grnd_level | visibility | wind_speed | wind_deg | wind_gust | clouds_all | sys_type | sys_id | sys_country | sys_sunrise         | sys_sunset          | timezone |      id | name       | cod |
 |---------------------+-----------+-----------+--------------+----------------+-----------------------+----------------+----------+-----------+-----------------+---------------+---------------+---------------+---------------+----------------+-----------------+------------+------------+----------+-----------+------------+----------+--------+-------------+---------------------+---------------------+----------+---------+------------+-----|
-| 2026-01-18 10:30:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04d            | stations |     23.73 |            24.4 |         23.73 |         23.73 |          1011 |            86 |           1011 |            1006 |      10000 |       0.59 |      222 |       1.0 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-17 23:45:03 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     24.92 |           25.53 |         24.92 |         24.92 |          1010 |            79 |           1010 |            1005 |      10000 |       2.07 |      273 |      3.17 |        100 |      nan |    nan | EC          | 2026-01-17 06:26:34 | 2026-01-17 18:36:52 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-18 08:30:04 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10d            | stations |     24.82 |           25.71 |         24.82 |         24.82 |          1011 |            90 |           1011 |            1006 |      10000 |       0.89 |      212 |      1.52 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-18 10:00:04 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10d            | stations |     23.49 |           24.19 |         23.49 |         23.49 |          1011 |            88 |           1011 |            1006 |      10000 |       0.89 |      227 |      1.35 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-17 23:30:02 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     24.92 |           25.53 |         24.92 |         24.92 |          1010 |            79 |           1010 |            1005 |      10000 |       2.07 |      273 |      3.17 |        100 |      nan |    nan | EC          | 2026-01-17 06:26:34 | 2026-01-17 18:36:52 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-17 22:41:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     24.82 |           25.45 |         24.82 |         24.82 |          1010 |            80 |           1010 |            1005 |      10000 |       1.88 |      278 |      2.84 |        100 |      1.0 | 8552.0 | EC          | 2026-01-17 06:26:34 | 2026-01-17 18:36:52 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-17 22:53:32 |  -80.4477 |   -1.0516 |          804 | Clouds         | overcast clouds       | 04n            | stations |     24.33 |           24.91 |         24.33 |         24.33 |          1010 |            80 |           1010 |             997 |      10000 |       1.87 |      279 |      2.87 |        100 |      1.0 | 8552.0 | EC          | 2026-01-17 06:26:33 | 2026-01-17 18:36:50 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-18 10:15:06 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10d            | stations |     23.49 |           24.19 |         23.49 |         23.49 |          1011 |            88 |           1011 |            1006 |      10000 |       0.89 |      227 |      1.35 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-18 07:45:04 |  -80.4544 |   -1.0546 |          501 | Rain           | moderate rain         | 10d            | stations |     24.82 |           25.71 |         24.82 |         24.82 |          1011 |            90 |           1011 |            1006 |      10000 |       1.03 |      222 |      1.69 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-17 23:56:00 |  -80.4486 |   -1.0541 |          804 | Clouds         | overcast clouds       | 04n            | stations |     24.86 |           25.46 |         24.86 |         24.86 |          1010 |            79 |           1010 |            1004 |      10000 |       2.06 |      273 |      3.19 |        100 |      nan |    nan | EC          | 2026-01-17 06:26:33 | 2026-01-17 18:36:50 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 11:15:06 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     26.82 |           29.86 |         26.82 |         26.82 |          1011 |            86 |           1011 |            1006 |      10000 |       0.59 |      222 |       1.0 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 12:00:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     26.82 |           29.51 |         26.82 |         26.82 |          1010 |            82 |           1010 |            1005 |      10000 |       1.01 |      250 |      1.26 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 11:30:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     26.82 |           29.51 |         26.82 |         26.82 |          1010 |            82 |           1010 |            1005 |      10000 |       1.01 |      250 |      1.26 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 10:30:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     23.73 |            24.4 |         23.73 |         23.73 |          1011 |            86 |           1011 |            1006 |      10000 |       0.59 |      222 |       1.0 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 10:15:06 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            |            10d | stations |     23.49 |           24.19 |         23.49 |         23.49 |          1011 |            88 |           1011 |            1006 |      10000 |       0.89 |      227 |      1.35 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 11:00:06 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     23.73 |            24.4 |         23.73 |         23.73 |          1011 |            86 |           1011 |            1006 |      10000 |       0.59 |      222 |       1.0 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 11:45:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     26.82 |           29.51 |         26.82 |         26.82 |          1010 |            82 |           1010 |            1005 |      10000 |       1.01 |      250 |      1.26 |        100 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 13:30:03 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     27.82 |           30.08 |         27.82 |         27.82 |          1007 |            68 |           1007 |            1003 |      10000 |       2.07 |      300 |       2.2 |         96 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 13:43:29 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     27.82 |           30.08 |         27.82 |         27.82 |          1007 |            68 |           1007 |            1003 |      10000 |       2.07 |      300 |       2.2 |         96 |      1.0 | 8552.0 | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-18 10:45:05 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       |            04d | stations |     23.73 |            24.4 |         23.73 |         23.73 |          1011 |            86 |           1011 |            1006 |      10000 |       0.59 |      222 |       1.0 |        100 |      nan |    nan | EC          | 2026-01-18 06:26:55 | 2026-01-18 18:37:10 |   -18000 | 3652941 | Portoviejo | 200 |
 
 
-Realizar una gráfica de la Temperatura en el tiempo.
+* Gráfica de la Temperatura en el Tiempo.
 
 
 El siguiente cógido permite hacer la gráfica de la temperatura vs
@@ -436,7 +598,6 @@ import matplotlib.dates as mdates
 import pandas as pd
 import os
 
-# 1. Lectura del archivo y preparación
 csv_path = '/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'
 
 if not os.path.exists(csv_path):
@@ -444,49 +605,41 @@ if not os.path.exists(csv_path):
 else:
     df = pd.read_csv(csv_path)
     df['dt'] = pd.to_datetime(df['dt'])
+    df = df.sort_values('dt')
 
-    # Directorio de salida (Ruta absoluta para que Python guarde el archivo)
     output_dir = '/home/alejandro/PortoviejoWeather/weather-site/content/images'
     os.makedirs(output_dir, exist_ok=True)
 
-    # 2. Generación de la Gráfica
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(df['dt'], df['main_temp'], linestyle='-', color='tab:blue')
+    fig = plt.figure(figsize=(12, 8))
+    plt.plot(df['dt'], df['main_temp'], linestyle='-', marker='o', markersize=3, color='tab:blue')
 
     ax = plt.gca()
-    locator = mdates.AutoDateLocator()
-    formatter = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+    # CAMBIO: Formato de fecha largo y marcas cada 15 minutos
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
 
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
-    plt.xticks(rotation=45)
-    plt.grid(True)
-
-    city_name = df['name'].iloc[0] if 'name' in df.columns else "Portoviejo"
-    plt.title(f'Main Temp vs Time in {city_name}')
+    # CAMBIO: Rotación a 45 grados y alineación a la derecha como en tu imagen
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    
+    plt.title(f"Main Temp vs Time in {df['name'].iloc[0]}")
     plt.tight_layout()
 
-    # 3. Guardado (Usamos la ruta absoluta)
     fname = os.path.join(output_dir, 'temperature_style.png')
     plt.savefig(fname)
-
-    # 4. RETORNO (Ruta relativa: clave para que el sitio web muestre la imagen)
-    # Esto es lo que aparecerá en el bloque #+RESULTS:
     return "./images/temperature_style.png"
 #+end_src
 
-#+caption: Gráfica Temperatura vs Tiempo
 #+RESULTS:
 [[file:./images/temperature_style.png]]
 
-**  Realice una gráfica de Humedad con respecto al tiempo
+**  Gráfica de Humedad con respecto al Tiempo.
 #+begin_src python :results file :exports both :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import os
 
-# 1. Lectura del archivo
 csv_path = '/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'
 
 if not os.path.exists(csv_path):
@@ -494,51 +647,39 @@ if not os.path.exists(csv_path):
 else:
     df = pd.read_csv(csv_path)
     df['dt'] = pd.to_datetime(df['dt'])
+    df = df.sort_values('dt')
 
-    # 2. Configuración de carpeta de imágenes (Ruta absoluta para guardar)
     output_dir = '/home/alejandro/PortoviejoWeather/weather-site/content/images'
     os.makedirs(output_dir, exist_ok=True)
 
-    # 3. Generación de la Gráfica
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(12, 8))
+    plt.plot(df['dt'], df['main_humidity'], linestyle='-', marker='o', markersize=3, color='tab:cyan')
 
-    plt.plot(df['dt'], df['main_humidity'], linestyle='-', linewidth=2, color='tab:cyan')
-
-    # Configuración del eje X (Fechas)
     ax = plt.gca()
-    formatter = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-    locator = mdates.AutoDateLocator()
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
+
+    # Rotación exacta a la de la imagen
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.grid(True, linestyle='--', alpha=0.5)
     
-    plt.xticks(rotation=45, ha='right')
-    plt.grid(True)
-
-    # Título
-    city_name = df['name'].iloc[0] if 'name' in df.columns else "Portoviejo"
-    plt.title(f'Humidity vs Time in {city_name}')
-
+    plt.title(f"Humidity vs Time in {df['name'].iloc[0]}")
     plt.tight_layout()
 
-    # 4. Guardado (Usa la ruta absoluta definida arriba)
     fname = os.path.join(output_dir, 'humidity.png')
     plt.savefig(fname)
-
-    # 5. RETORNO (Ruta relativa para el sitio web)
     return "./images/humidity.png"
 #+end_src
 #+RESULTS:
 [[file:./images/humidity.png]]
 
-**  *Opcional* Presente alguna gráfica de interés.
-** Gráfica de Presión Atmosférica (Opcional)
+** Gráfica de Presión Atmosférica.
 #+begin_src python :results file :exports both :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import os
 
-# 1. Lectura del archivo
 csv_path = '/home/alejandro/PortoviejoWeather/clima-portoviejo-hoy.csv'
 
 if not os.path.exists(csv_path):
@@ -546,51 +687,37 @@ if not os.path.exists(csv_path):
 else:
     df = pd.read_csv(csv_path)
     df['dt'] = pd.to_datetime(df['dt'])
-    
-    # 2. Configuración de carpeta (Ruta absoluta para el sistema de archivos)
+    df = df.sort_values('dt')
+
     output_dir = '/home/alejandro/PortoviejoWeather/weather-site/content/images'
     os.makedirs(output_dir, exist_ok=True)
-    
-    # 3. Generación de la Gráfica
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(df['dt'], df['main_pressure'], linestyle='-', linewidth=2, color='tab:green')
-    
-    # Configuración del eje X (Fechas)
+
+    fig = plt.figure(figsize=(12, 8))
+    plt.plot(df['dt'], df['main_pressure'], linestyle='-', marker='o', markersize=3, color='tab:green')
+
     ax = plt.gca()
-    formatter = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-    locator = mdates.AutoDateLocator()
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=15))
 
-    plt.xticks(rotation=45, ha='right')
-    plt.grid(True)
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.grid(True, linestyle='--', alpha=0.5)
     
-    # Título y etiquetas
-    city_name = df['name'].iloc[0] if 'name' in df.columns else "Portoviejo"
-    plt.title(f'Pressure vs Time in {city_name}')
+    plt.title(f"Pressure vs Time in {df['name'].iloc[0]}")
     plt.ylabel('Presión (hPa)')
-
     plt.tight_layout()
-    
-    # 4. Guardado (Usando la ruta absoluta)
+
     fname = os.path.join(output_dir, 'pressure.png')
     plt.savefig(fname)
-   
-    # 5. RETORNO (Ruta relativa para el sitio web)
-    # Esto asegura que el HTML busque la imagen en ./images/pressure.png
     return "./images/pressure.png"
 #+end_src
 
 #+RESULTS:
 [[file:./images/pressure.png]]
 
-Debido a que el archivo index.org se abre dentro de la carpeta
-/content/, y en cambio el servidor http de emacs se ejecuta desde la
-carpeta /public/ es necesario copiar el archivo a la ubicación
-equivalente en ~/public/images~
-
 * Sincronización y Configuración del Servidor
-Debido a que el archivo ~index.org~ utiliza rutas relativas (~./images/~) para ser compatible con la exportación web, es necesario asegurar que las imágenes generadas por Python en la carpeta ~/content/images/~ se copien a la carpeta ~/public/images/~.
+Debido a que el archivo ~index.org~ utiliza rutas relativas
+(~./images/~) para ser compatible con la exportación web,
+es necesario asegurar que las imágenes generadas por Python en la carpeta ~/content/images/~ se copien a la carpeta ~/public/images/~.
 
 #+begin_src shell :results output
 # 1. Definir rutas del proyecto
@@ -626,7 +753,7 @@ SITE_DIR="/home/alejandro/PortoviejoWeather/weather-site"
 ORIGEN="/home/alejandro/EPN-Lectures/iccd332ArqComp-2024-B/Proyectos/index.org"
 DESTINO="$SITE_DIR/content/index.org"
 
-# 2. Copiar el index.org más reciente a la carpeta de construcción
+# 2. Copiar el index.org más reciente a la carpeta de content.
 cp "$ORIGEN" "$DESTINO"
 echo "Archivo index.org actualizado."
 
@@ -642,11 +769,6 @@ echo "--- PROCESO FINALIZADO: Sitio web actualizado y listo para visualizar ---"
 : Archivo index.org actualizado.
 : --- PROCESO FINALIZADO: Sitio web actualizado y listo para visualizar ---
 
-* Referencias
-- [[https://emacs.stackexchange.com/questions/28715/get-pandas-data-frame-as-a-table-in-org-babel][presentar dataframe como tabla en emacs org]]
-- [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][Python Source Code Blocks in Org Mode]]
-- [[https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/][Systems Crafters Construir tu sitio web con Modo Emacs Org]]
-- [[https://www.youtube.com/watch?v=AfkrzFodoNw][Vídeo Youtube Build Your Website with Org Mode]]
 * Footnotes
 
 [fn:1] Recuerde que su máquina ha de disponer de un entorno de

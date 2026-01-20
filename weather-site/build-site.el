@@ -20,18 +20,41 @@
       org-html-head-include-default-style nil
       org-html-head "
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Inter:wght@400;700;900&display=swap');
+  /* Fuentes */
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700;900&display=swap');
 
-  /* CONFIGURACIÓN DE PÁGINA Y ESTRUCTURA */
+  /* CONFIGURACIÓN DE PÁGINA */
   body {
     background-color: #000000;
     color: #ffffff;
-    font-family: 'Inter', sans-serif;
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 0.9em; 
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.8;
+    cursor: default; /* Cursor normal */
   }
 
-  /* SIDEBAR IZQUIERDO (ÍNDICE) */
+  /* --- EFECTO SPOTLIGHT --- */
+  #spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+    /* Tamaño 500px */
+    width: 500px; 
+    height: 500px;
+    
+    /* Intensidad al 0.25 (25%) */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+    
+    border-radius: 50%;
+    pointer-events: none; 
+    z-index: 9999;
+    transform: translate(-50%, -50%); 
+    mix-blend-mode: screen; 
+  }
+
+  /* SIDEBAR IZQUIERDO */
   #table-of-contents {
     width: 280px;
     height: 100vh;
@@ -76,10 +99,9 @@
     margin-left: 320px; 
     padding: 60px 40px;
     max-width: 900px;
-    display: block; /* Asegura que el flujo sea vertical */
+    display: block; 
   }
 
-  /* TÍTULOS */
   h1, h2, h3 {
     font-weight: 900;
     text-transform: uppercase;
@@ -89,7 +111,7 @@
     margin-top: 60px;
   }
 
-  /* CÓDIGO CON GLOW BLANCO */
+  /* GLOW BLANCO */
   pre.src, pre.example {
     background-color: #000000 !important;
     font-family: 'JetBrains Mono', monospace;
@@ -106,7 +128,6 @@
     transform: translateY(-5px);
   }
 
-  /* TABLAS */
   table {
     width: 100%;
     border-collapse: separate;
@@ -127,7 +148,6 @@
 
   td { padding: 15px; border-bottom: 1px solid #111; color: #666; }
 
-  /* IMÁGENES CON GLOW ROJO */
   img {
     width: 100%;
     border-radius: 20px;
@@ -142,9 +162,8 @@
     transform: scale(1.03) rotate(0.5deg);
   }
 
-  /* PIE DE PÁGINA AL FINAL */
   #postamble {
-    margin-left: 320px; /* Alineado con el contenido */
+    margin-left: 320px; 
     margin-top: 50px;
     padding: 40px;
     border-top: 1px solid #111;
@@ -156,13 +175,42 @@
     display: block;
   }
 
-  /* SCROLLBAR BLANCO */
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #000; }
   ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
 
-</style>")
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const spot = document.createElement('div');
+      spot.id = 'spotlight';
+      document.body.appendChild(spot);
+
+      let mouseX = 0, mouseY = 0;
+      let spotX = 0, spotY = 0;
+      
+      const delay = 0.1; 
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+      });
+
+      function animate() {
+          spotX += (mouseX - spotX) * delay;
+          spotY += (mouseY - spotY) * delay;
+
+          spot.style.left = spotX + 'px';
+          spot.style.top = spotY + 'px';
+
+          requestAnimationFrame(animate);
+      }
+      animate();
+  });
+</script>
+")
 
 ;; --- DEFINICIÓN DEL PROYECTO ---
 (setq org-publish-project-alist
