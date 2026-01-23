@@ -743,11 +743,51 @@ fi
 
 #+RESULTS:
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/humidity.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/plot.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/plot.png'
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/pressure.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/temperature.png'
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/temperature_style.png'
 : Sincronización: Imágenes copiadas de content a public.
+
+* Sincronización para todo el Directorio.
+#+begin_src shell :results output
+# 1. Definir rutas
+# Origen
+SRC_DIR="/home/alejandro/PortoviejoWeather/weather-site/content/images/"
+
+# Destinos
+DEST_ROOT="/home/alejandro/PortoviejoWeather/images"
+DEST_PUBLIC="/home/alejandro/PortoviejoWeather/public/images"
+
+# 2. Crear carpetas si no existen
+mkdir -p "$DEST_ROOT"
+mkdir -p "$DEST_PUBLIC"
+
+# 3. Sincronizar imágenes
+if [ -d "$SRC_DIR" ] && [ "$(ls -A $SRC_DIR)" ]; then
+    # Copiar a la carpeta images en la raíz
+    echo "Copiando a $DEST_ROOT..."
+    cp -rfv "$SRC_DIR"* "$DEST_ROOT"
+    
+    # Copiar a la carpeta public/images
+    echo "Copiando a $DEST_PUBLIC..."
+    cp -rfv "$SRC_DIR"* "$DEST_PUBLIC"
+    
+    echo "Sincronizacion completada en todos los destinos."
+else
+    echo "Error: La carpeta de origen ($SRC_DIR) no existe o esta vacia."
+fi
+#+end_src
+
+#+RESULTS:
+: Copiando a /home/alejandro/PortoviejoWeather/images...
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/images/humidity.png'
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/images/pressure.png'
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/images/temperature_style.png'
+: Copiando a /home/alejandro/PortoviejoWeather/public/images...
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/public/images/humidity.png'
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/public/images/pressure.png'
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/public/images/temperature_style.png'
+: Sincronizacion completada en todos los destinos.
+
 
 * Generación del Sitio Web
 Presiona ~C-c C-c~ para actualizar la estructura de archivos y reconstruir el HTML con el estilo CSS moderno.
