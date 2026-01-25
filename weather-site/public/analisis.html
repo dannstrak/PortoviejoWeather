@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="LAPTOP-6L1JB5BF" />
+<meta name="generator" content="Org Mode" />
+
+<style>
+  /* Fuentes */
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700;900&display=swap');
+
+  /* CONFIGURACIÓN DE PÁGINA */
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 0.9em; 
+    margin: 0;
+    line-height: 1.8;
+    cursor: default; /* Cursor normal */
+  }
+
+  /* --- EFECTO SPOTLIGHT --- */
+  #spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+    /* Tamaño 500px */
+    width: 500px; 
+    height: 500px;
+    
+    /* Intensidad al 0.25 (25%) */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+    
+    border-radius: 50%;
+    pointer-events: none; 
+    z-index: 9999;
+    transform: translate(-50%, -50%); 
+    mix-blend-mode: screen; 
+  }
+
+  /* SIDEBAR IZQUIERDO */
+  #table-of-contents {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #050505;
+    border-right: 1px solid #1a1a1a;
+    padding: 40px 20px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  #table-of-contents h2 {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #444;
+    margin-bottom: 20px;
+    border: none;
+  }
+
+  #table-of-contents ul { list-style: none; padding: 0; }
+  #table-of-contents li { margin: 15px 0; }
+  
+  #table-of-contents a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    display: block;
+  }
+
+  #table-of-contents a:hover {
+    color: #ffffff;
+    padding-left: 10px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  /* CONTENIDO PRINCIPAL */
+  #content {
+    margin-left: 320px; 
+    padding: 60px 40px;
+    max-width: 900px;
+    display: block; 
+  }
+
+  h1, h2, h3 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    border-bottom: 1px solid #111;
+    padding-bottom: 10px;
+    margin-top: 60px;
+  }
+
+  /* GLOW BLANCO */
+  pre.src, pre.example {
+    background-color: #000000 !important;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  pre.src:hover, pre.example:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 80px 20px rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    margin: 40px 0;
+    border: 1px solid #222;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  th {
+    background-color: #ffffff;
+    color: #000;
+    padding: 18px;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  td { padding: 15px; border-bottom: 1px solid #111; color: #666; }
+
+  img {
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #222;
+    margin: 40px 0;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  img:hover {
+    border-color: #ff0000;
+    box-shadow: 0 0 100px 30px rgba(255, 0, 0, 0.45);
+    transform: scale(1.03) rotate(0.5deg);
+  }
+
+  #postamble {
+    margin-left: 320px; 
+    margin-top: 50px;
+    padding: 40px;
+    border-top: 1px solid #111;
+    text-align: center;
+    color: #444;
+    text-transform: uppercase;
+    font-size: 0.7em;
+    clear: both;
+    display: block;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const spot = document.createElement('div');
+      spot.id = 'spotlight';
+      document.body.appendChild(spot);
+
+      let mouseX = 0, mouseY = 0;
+      let spotX = 0, spotY = 0;
+      
+      const delay = 0.1; 
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+      });
+
+      function animate() {
+          spotX += (mouseX - spotX) * delay;
+          spotY += (mouseY - spotY) * delay;
+
+          spot.style.left = spotX + 'px';
+          spot.style.top = spotY + 'px';
+
+          requestAnimationFrame(animate);
+      }
+      animate();
+  });
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#análisis-de-datos-de-temperatura">Análisis de Datos de Temperatura</a>
+<ul>
+<li><a href="#lectura-de-datos">Lectura de Datos</a></li>
+<li><a href="#análisis-de-datos">Análisis de Datos</a></li>
+<li><a href="#presentación-de-resultados">Presentación de Resultados</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+<a id="orgbd481e9"></a>
+</p>
+<div id="outline-container-análisis-de-datos-de-temperatura" class="outline-2">
+<h2 id="análisis-de-datos-de-temperatura">Análisis de Datos de Temperatura</h2>
+<div class="outline-text-2" id="text-análisis-de-datos-de-temperatura">
+<ul class="org-ul">
+<li>Fecha: 2024-08-06</li>
+<li>Coder: LeninGF</li>
+<li>Objetivo: realizar la isnpección sobre los datos recolectados a través
+del API de openweather y usando la configuración de Linux para el
+registro de los mismos</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import os
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+os.listdir(os.getcwd())
+</pre>
+</div>
+
+<p>
+<a id="org93be83e"></a>
+</p>
+</div>
+<div id="outline-container-lectura-de-datos" class="outline-3">
+<h3 id="lectura-de-datos">Lectura de Datos</h3>
+<div class="outline-text-3" id="text-lectura-de-datos">
+<p>
+Lectura del archivo csv con <i>with open</i> debido a que openweather coloca
+valores sobre la lluvia y la nieve cuando éstos están disponibles por lo
+que en este caso he obtenido 30 campos de lectura obviando los
+referidos. Esto puede solventarse incluyendo los campos con valor NaN
+por defecto en el programa de Python para captura de información
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import csv
+csv_file = 'clima-portoviejo-hoy.csv'
+filtered_rows = []
+with open(csv_file, 'r') as f:
+    reader = csv.reader(f)
+    for row in reader:
+        if len(row)==30:
+            filtered_rows.append(row)
+len(filtered_rows)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-jupyter-python">header = filtered_rows[0]
+data = filtered_rows[1:]
+print(len(header), len(data))
+</pre>
+</div>
+
+<pre class="example" id="org2083409">
+30 26
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python"># df = pd.read_csv('clima-quito-hoy.csv')
+df = pd.DataFrame(data, columns=header)
+df.shape
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-jupyter-python">df.sample(5)
+</pre>
+</div>
+
+<p>
+<a id="org91263c9"></a>
+</p>
+</div>
+</div>
+<div id="outline-container-análisis-de-datos" class="outline-3">
+<h3 id="análisis-de-datos">Análisis de Datos</h3>
+<div class="outline-text-3" id="text-análisis-de-datos">
+<ul class="org-ul">
+<li>Se procede a realizar un plot de variables de interés según el tiempo
+capturado. La primera columna contiene la información del API sobre
+tiempo en formato <b>Timestamp</b>, misma que se puede convertir a
+<b>datetime</b>.</li>
+<li>Debido al proceso utilizado para guardar los datos <code>dt</code> tiene como
+tipo de dato objeto por lo que es necesario convertirlo a entero. De
+igual manera existen otras variables capturadas que en este caso por
+la lectura con <code>with open</code> se detectan como object en vez de sus tipos
+de datos correctos</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">df.info()
+</pre>
+</div>
+
+<pre class="example" id="org6e9c116">
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 26 entries, 0 to 25
+Data columns (total 30 columns):
+ #   Column                 Non-Null Count  Dtype 
+---  ------                 --------------  ----- 
+ 0   dt                     26 non-null     object
+ 1   coord_lon              26 non-null     object
+ 2   coord_lat              26 non-null     object
+ 3   weather_0_id           26 non-null     object
+ 4   weather_0_main         26 non-null     object
+ 5   weather_0_description  26 non-null     object
+ 6   weather_0_icon         26 non-null     object
+ 7   base                   26 non-null     object
+ 8   main_temp              26 non-null     object
+ 9   main_feels_like        26 non-null     object
+ 10  main_temp_min          26 non-null     object
+ 11  main_temp_max          26 non-null     object
+ 12  main_pressure          26 non-null     object
+ 13  main_humidity          26 non-null     object
+ 14  main_sea_level         26 non-null     object
+ 15  main_grnd_level        26 non-null     object
+ 16  visibility             26 non-null     object
+ 17  wind_speed             26 non-null     object
+ 18  wind_deg               26 non-null     object
+ 19  wind_gust              26 non-null     object
+ 20  clouds_all             26 non-null     object
+ 21  sys_type               26 non-null     object
+ 22  sys_id                 26 non-null     object
+ 23  sys_country            26 non-null     object
+ 24  sys_sunrise            26 non-null     object
+ 25  sys_sunset             26 non-null     object
+ 26  timezone               26 non-null     object
+ 27  id                     26 non-null     object
+ 28  name                   26 non-null     object
+ 29  cod                    26 non-null     object
+dtypes: object(30)
+memory usage: 6.2+ KB
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import pandas as pd
+
+# 1. Recorremos todas las columnas automáticamente
+for column in df.columns:
+    try:
+        # Intenta convertir el texto a número (ej: "15.4" -&gt; 15.4)
+        df[column] = pd.to_numeric(df[column])
+    except ValueError:
+        # Si falla (porque es una fecha o una palabra), simplemente pasa a la siguiente
+        pass
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">df.info()
+</pre>
+</div>
+
+<pre class="example" id="org25afa98">
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 26 entries, 0 to 25
+Data columns (total 31 columns):
+ #   Column                 Non-Null Count  Dtype  
+---  ------                 --------------  -----  
+ 0   dt                     26 non-null     object 
+ 1   coord_lon              26 non-null     float64
+ 2   coord_lat              26 non-null     float64
+ 3   weather_0_id           26 non-null     int64  
+ 4   weather_0_main         26 non-null     object 
+ 5   weather_0_description  26 non-null     object 
+ 6   weather_0_icon         26 non-null     object 
+ 7   base                   26 non-null     object 
+ 8   main_temp              26 non-null     float64
+ 9   main_feels_like        26 non-null     float64
+ 10  main_temp_min          26 non-null     float64
+ 11  main_temp_max          26 non-null     float64
+ 12  main_pressure          26 non-null     int64  
+ 13  main_humidity          26 non-null     int64  
+ 14  main_sea_level         26 non-null     int64  
+ 15  main_grnd_level        26 non-null     int64  
+ 16  visibility             26 non-null     int64  
+ 17  wind_speed             26 non-null     float64
+ 18  wind_deg               26 non-null     int64  
+ 19  wind_gust              26 non-null     float64
+ 20  clouds_all             26 non-null     int64  
+ 21  sys_type               9 non-null      float64
+ 22  sys_id                 9 non-null      float64
+ 23  sys_country            26 non-null     object 
+ 24  sys_sunrise            26 non-null     object 
+ 25  sys_sunset             26 non-null     object 
+ 26  timezone               26 non-null     int64  
+ 27  id                     26 non-null     int64  
+ 28  name                   26 non-null     object 
+ 29  cod                    26 non-null     int64  
+ 30  fecha_hora             26 non-null     int64  
+dtypes: float64(10), int64(12), object(9)
+memory usage: 6.4+ KB
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python"># 1. Creamos la copia de seguridad
+df_etl = df.copy()
+
+# 2. Convertimos las fechas usando la función inteligente de Pandas
+# Esta función detecta automáticamente tu formato de texto "2026-01-18..."
+df_etl['dt'] = pd.to_datetime(df['dt'])
+df_etl['sys_sunrise'] = pd.to_datetime(df['sys_sunrise'])
+df_etl['sys_sunset'] = pd.to_datetime(df['sys_sunset'])
+
+# 3. Verificamos el resultado
+df_etl.sample(5)
+</pre>
+</div>
+
+<p>
+<a id="orgdf43969"></a>
+Generalmente es de interés realizar un breve análisis estadístico de las
+variables del dataset
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">display(df_etl.describe().transpose())
+</pre>
+</div>
+
+<pre class="example" id="org80b43b3">
+                count                           mean                    min  \
+dt                 26  2026-01-19 08:16:31.653846528    2026-01-18 10:15:06   
+coord_lon        26.0                     -80.454231               -80.4544   
+coord_lat        26.0                      -1.054423                -1.0546   
+weather_0_id     26.0                     663.692308                  500.0   
+main_temp        26.0                      25.151154                  23.49   
+main_feels_like  26.0                      26.514615                  24.19   
+main_temp_min    26.0                      25.151154                  23.49   
+main_temp_max    26.0                      25.151154                  23.49   
+main_pressure    26.0                    1009.692308                 1007.0   
+main_humidity    26.0                      82.653846                   65.0   
+main_sea_level   26.0                    1009.692308                 1007.0   
+main_grnd_level  26.0                    1004.692308                 1002.0   
+visibility       26.0                        10000.0                10000.0   
+wind_speed       26.0                       0.885385                   0.27   
+wind_deg         26.0                     234.307692                   26.0   
+wind_gust        26.0                       1.117692                   0.51   
+clouds_all       26.0                      98.923077                   92.0   
+sys_type          9.0                            1.0                    1.0   
+sys_id            9.0                         8552.0                 8552.0   
+sys_sunrise        26  2026-01-19 06:27:14.961538048    2026-01-18 06:26:55   
+sys_sunset         26  2026-01-19 18:37:26.961538816    2026-01-18 18:37:10   
+timezone         26.0                       -18000.0               -18000.0   
+id               26.0                      3652941.0              3652941.0   
+cod              26.0                          200.0                  200.0   
+fecha_hora       26.0          1768810591653846528.0  1768731306000000000.0   
+
+                                   25%                         50%  \
+dt                 2026-01-18 11:48:50         2026-01-19 09:00:07   
+coord_lon                     -80.4544                    -80.4544   
+coord_lat                      -1.0546                     -1.0546   
+weather_0_id                     500.0                       804.0   
+main_temp                        23.89                       23.94   
+main_feels_like                  24.63                       24.69   
+main_temp_min                    23.89                       23.94   
+main_temp_max                    23.89                       23.94   
+main_pressure                   1010.0                      1010.0   
+main_humidity                     82.0                        87.0   
+main_sea_level                  1010.0                      1010.0   
+main_grnd_level                 1005.0                      1005.0   
+visibility                     10000.0                     10000.0   
+wind_speed                        0.41                        0.59   
+wind_deg                         199.0                       224.5   
+wind_gust                         0.59                       0.895   
+clouds_all                       100.0                       100.0   
+sys_type                           1.0                         1.0   
+sys_id                          8552.0                      8552.0   
+sys_sunrise        2026-01-18 06:26:55  2026-01-19 06:27:14.500000   
+sys_sunset         2026-01-18 18:37:10  2026-01-19 18:37:26.500000   
+timezone                      -18000.0                    -18000.0   
+id                           3652941.0                   3652941.0   
+cod                              200.0                       200.0   
+fecha_hora       1768736930000000000.0       1768813207000000000.0   
+
+                                           75%                    max  \
+dt               2026-01-20 04:11:23.750000128    2026-01-20 05:45:10   
+coord_lon                             -80.4544                 -80.45   
+coord_lat                              -1.0546                  -1.05   
+weather_0_id                             804.0                  804.0   
+main_temp                                26.82                  28.82   
+main_feels_like                          29.51                   31.5   
+main_temp_min                            26.82                  28.82   
+main_temp_max                            26.82                  28.82   
+main_pressure                          1010.75                 1011.0   
+main_humidity                            87.75                   88.0   
+main_sea_level                         1010.75                 1011.0   
+main_grnd_level                        1005.75                 1006.0   
+visibility                             10000.0                10000.0   
+wind_speed                                1.01                   2.63   
+wind_deg                                 300.0                  346.0   
+wind_gust                                 1.26                   2.64   
+clouds_all                               100.0                  100.0   
+sys_type                                   1.0                    1.0   
+sys_id                                  8552.0                 8552.0   
+sys_sunrise                2026-01-20 06:27:35    2026-01-20 06:27:35   
+sys_sunset                 2026-01-20 18:37:44    2026-01-20 18:37:44   
+timezone                              -18000.0               -18000.0   
+id                                   3652941.0              3652941.0   
+cod                                      200.0                  200.0   
+fecha_hora               1768882283750000128.0  1768887910000000000.0   
+
+                                   std  
+dt                                 NaN  
+coord_lon                     0.000863  
+coord_lat                     0.000902  
+weather_0_id                154.550903  
+main_temp                     1.878521  
+main_feels_like               2.759354  
+main_temp_min                 1.878521  
+main_temp_max                 1.878521  
+main_pressure                 1.407671  
+main_humidity                 8.113901  
+main_sea_level                1.407671  
+main_grnd_level               1.319674  
+visibility                         0.0  
+wind_speed                    0.744694  
+wind_deg                     84.675744  
+wind_gust                     0.683036  
+clouds_all                    2.415336  
+sys_type                           0.0  
+sys_id                             0.0  
+sys_sunrise                        NaN  
+sys_sunset                         NaN  
+timezone                           0.0  
+id                                 0.0  
+cod                                0.0  
+fecha_hora       73467886263832.203125  
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">df_etl.to_csv('clima-portoviejo-hoy.csv', index=False)
+</pre>
+</div>
+
+<p>
+<a id="orgd25f232"></a>
+</p>
+</div>
+</div>
+<div id="outline-container-presentación-de-resultados" class="outline-3">
+<h3 id="presentación-de-resultados">Presentación de Resultados</h3>
+<div class="outline-text-3" id="text-presentación-de-resultados">
+<p>
+Se procede a realizar gráficas de interés para estudiar el
+comportamiento climatológico
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import matplotlib.pyplot as plt
+
+df_etl.plot.line('dt', 'main_temp')
+plt.grid()
+plt.title(f'Main Temp vs Time in {next(iter(set(df_etl.name)))}')
+</pre>
+</div>
+
+
+<div id="org98a2584" class="figure">
+<p><img src="fc9f87773fa5cbbd8c80c1d3d9e091deceab08e2.png" alt="fc9f87773fa5cbbd8c80c1d3d9e091deceab08e2.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import plotly_express as px
+fig = px.line(df_etl, x='dt', y=['main_temp', 'main_humidity'], title=f"Main Tem &amp; Humidity vs Time in {next(iter(set(df_etl.name)))}")
+fig.show("iframe")
+</pre>
+</div>
+
+<div class="html" id="org7641a47">
+<p>
+&lt;iframe
+    scrolling="no"
+    width="100%"
+    height="545px"
+    src="iframe<sub>figures</sub>/figure<sub>145.html</sub>"
+    frameborder="0"
+    allowfullscreen
+&gt;&lt;/iframe&gt;
+</p>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">df_etl.main_temp.hist(bins=20)
+plt.title(f'Histogram of Main Temp in {next(iter(set(df_etl.name)))}')
+plt.grid()
+</pre>
+</div>
+
+
+<div id="orge5a6cab" class="figure">
+<p><img src="37724ea5c76bfec632ae17954229ef179563ea5c.png" alt="37724ea5c76bfec632ae17954229ef179563ea5c.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">fig = px.violin(df_etl, 'main_temp', title=f"Violin Plot Main Temp in {next(iter(set(df_etl.name)))}")
+fig.show("iframe")
+</pre>
+</div>
+
+<div class="html" id="orgaca4794">
+<p>
+&lt;iframe
+    scrolling="no"
+    width="100%"
+    height="545px"
+    src="iframe<sub>figures</sub>/figure<sub>148.html</sub>"
+    frameborder="0"
+    allowfullscreen
+&gt;&lt;/iframe&gt;
+</p>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">fig = plt.figure(figsize=(8,6))
+plt.plot(df_etl['dt'], df_etl['main_temp'])
+plt.grid()
+plt.title(f'Main Temp vs Time in {next(iter(set(df_etl.name)))}')
+fig.tight_layout()
+fname = '/home/leningfe/PythonProjects/QuitoWeather/weather-site/content/images/temperature.pdf' #Esto debe modificarse a la carpeta a donde se desea guardar
+plt.savefig(fname)
+</pre>
+</div>
+
+<pre class="example" id="org3c83fe1">
+---------------------------------------------------------------------------
+FileNotFoundError                         Traceback (most recent call last)
+Cell In[152], line 7
+      5 fig.tight_layout()
+      6 fname = '/home/leningfe/PythonProjects/QuitoWeather/weather-site/content/images/temperature.pdf' #Esto debe modificarse a la carpeta a donde se desea guardar
+----&gt; 7 plt.savefig(fname)
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/pyplot.py:1250, in savefig(*args, **kwargs)
+   1247 fig = gcf()
+   1248 # savefig default implementation has no return, so mypy is unhappy
+   1249 # presumably this is here because subclasses can return?
+-&gt; 1250 res = fig.savefig(*args, **kwargs)  # type: ignore[func-returns-value]
+   1251 fig.canvas.draw_idle()  # Need this if 'transparent=True', to reset colors.
+   1252 return res
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/figure.py:3490, in Figure.savefig(self, fname, transparent, **kwargs)
+   3488     for ax in self.axes:
+   3489         _recursively_make_axes_transparent(stack, ax)
+-&gt; 3490 self.canvas.print_figure(fname, **kwargs)
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/backend_bases.py:2186, in FigureCanvasBase.print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+   2182 try:
+   2183     # _get_renderer may change the figure dpi (as vector formats
+   2184     # force the figure dpi to 72), so we need to set it again here.
+   2185     with cbook._setattr_cm(self.figure, dpi=dpi):
+-&gt; 2186         result = print_method(
+   2187             filename,
+   2188             facecolor=facecolor,
+   2189             edgecolor=edgecolor,
+   2190             orientation=orientation,
+   2191             bbox_inches_restore=_bbox_inches_restore,
+   2192             **kwargs)
+   2193 finally:
+   2194     if bbox_inches and restore_bbox:
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/backend_bases.py:2042, in FigureCanvasBase._switch_canvas_and_return_print_method.&lt;locals&gt;.&lt;lambda&gt;(*args, **kwargs)
+   2038     optional_kws = {  # Passed by print_figure for other renderers.
+   2039         "dpi", "facecolor", "edgecolor", "orientation",
+   2040         "bbox_inches_restore"}
+   2041     skip = optional_kws - {*inspect.signature(meth).parameters}
+-&gt; 2042     print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+   2043         *args, **{k: v for k, v in kwargs.items() if k not in skip}))
+   2044 else:  # Let third-parties do as they see fit.
+   2045     print_method = meth
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/backends/backend_pdf.py:2779, in FigureCanvasPdf.print_pdf(self, filename, bbox_inches_restore, metadata)
+   2777     file = filename._ensure_file()
+   2778 else:
+-&gt; 2779     file = PdfFile(filename, metadata=metadata)
+   2780 try:
+   2781     file.newPage(width, height)
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/backends/backend_pdf.py:687, in PdfFile.__init__(self, filename, metadata)
+    685 self.original_file_like = None
+    686 self.tell_base = 0
+--&gt; 687 fh, opened = cbook.to_filehandle(filename, "wb", return_opened=True)
+    688 if not opened:
+    689     try:
+
+File ~/miniforge3/envs/iccd332/lib/python3.14/site-packages/matplotlib/cbook.py:546, in to_filehandle(fname, flag, return_opened, encoding)
+    544         fh = bz2.BZ2File(fname, flag)
+    545     else:
+--&gt; 546         fh = open(fname, flag, encoding=encoding)
+    547     opened = True
+    548 elif hasattr(fname, 'seek'):
+
+FileNotFoundError: [Errno 2] No such file or directory: '/home/leningfe/PythonProjects/QuitoWeather/weather-site/content/images/temperature.pdf'
+</pre>
+
+
+<div id="org17c213a" class="figure">
+<p><img src="7be409d68bade057b3069d34d392a40b7c78fdd9.png" alt="7be409d68bade057b3069d34d392a40b7c78fdd9.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-jupyter-python">import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(6, 6))
+
+sns.boxplot(y="main_temp", data=df_etl, color="skyblue")
+
+plt.title(f"Distribución de Temperatura en {next(iter(set(df_etl.name)))}")
+plt.ylabel("Temperatura (°C)")
+
+plt.show()
+</pre>
+</div>
+
+
+<div id="org734beec" class="figure">
+<p><img src="60df20646165798675fa77eec05c57177512cfaa.png" alt="60df20646165798675fa77eec05c57177512cfaa.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: LAPTOP-6L1JB5BF</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+</div>
+</body>
+</html>

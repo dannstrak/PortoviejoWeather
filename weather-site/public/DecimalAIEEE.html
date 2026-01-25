@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+<!-- 2026-01-25 Sun 03:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Representación IEEE 754</title>
+<meta name="author" content="Elvis Carlosama, Samuel Crespo, Juan Quinatoa, Alejandro Navarrete" />
+<meta name="generator" content="Org Mode" />
+
+<style>
+  /* Fuentes */
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700;900&display=swap');
+
+  /* CONFIGURACIÓN DE PÁGINA */
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 0.9em; 
+    margin: 0;
+    line-height: 1.8;
+    cursor: default; /* Cursor normal */
+  }
+
+  /* --- EFECTO SPOTLIGHT --- */
+  #spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+    /* Tamaño 500px */
+    width: 500px; 
+    height: 500px;
+    
+    /* Intensidad al 0.25 (25%) */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+    
+    border-radius: 50%;
+    pointer-events: none; 
+    z-index: 9999;
+    transform: translate(-50%, -50%); 
+    mix-blend-mode: screen; 
+  }
+
+  /* SIDEBAR IZQUIERDO */
+  #table-of-contents {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #050505;
+    border-right: 1px solid #1a1a1a;
+    padding: 40px 20px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  #table-of-contents h2 {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #444;
+    margin-bottom: 20px;
+    border: none;
+  }
+
+  #table-of-contents ul { list-style: none; padding: 0; }
+  #table-of-contents li { margin: 15px 0; }
+  
+  #table-of-contents a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    display: block;
+  }
+
+  #table-of-contents a:hover {
+    color: #ffffff;
+    padding-left: 10px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  /* CONTENIDO PRINCIPAL */
+  #content {
+    margin-left: 320px; 
+    padding: 60px 40px;
+    max-width: 900px;
+    display: block; 
+  }
+
+  h1, h2, h3 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    border-bottom: 1px solid #111;
+    padding-bottom: 10px;
+    margin-top: 60px;
+  }
+
+  /* GLOW BLANCO */
+  pre.src, pre.example {
+    background-color: #000000 !important;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  pre.src:hover, pre.example:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 80px 20px rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    margin: 40px 0;
+    border: 1px solid #222;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  th {
+    background-color: #ffffff;
+    color: #000;
+    padding: 18px;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  td { padding: 15px; border-bottom: 1px solid #111; color: #666; }
+
+  img {
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #222;
+    margin: 40px 0;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  img:hover {
+    border-color: #ff0000;
+    box-shadow: 0 0 100px 30px rgba(255, 0, 0, 0.45);
+    transform: scale(1.03) rotate(0.5deg);
+  }
+
+  #postamble {
+    margin-left: 320px; 
+    margin-top: 50px;
+    padding: 40px;
+    border-top: 1px solid #111;
+    text-align: center;
+    color: #444;
+    text-transform: uppercase;
+    font-size: 0.7em;
+    clear: both;
+    display: block;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const spot = document.createElement('div');
+      spot.id = 'spotlight';
+      document.body.appendChild(spot);
+
+      let mouseX = 0, mouseY = 0;
+      let spotX = 0, spotY = 0;
+      
+      const delay = 0.1; 
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+      });
+
+      function animate() {
+          spotX += (mouseX - spotX) * delay;
+          spotY += (mouseY - spotY) * delay;
+
+          spot.style.left = spotX + 'px';
+          spot.style.top = spotY + 'px';
+
+          requestAnimationFrame(animate);
+      }
+      animate();
+  });
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Representación IEEE 754</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>&Iacute;ndice</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org312424e">1. IEEE</a>
+<ul>
+<li><a href="#org54e56fa">1.1. Concepto</a></li>
+</ul>
+</li>
+<li><a href="#orgc1182be">2. Proceso manual de conversión</a>
+<ul>
+<li><a href="#org21f12ab">2.1. Paso 1: Determinar el signo</a></li>
+<li><a href="#org997800d">2.2. Paso 2: Separar parte entera y fraccionaria</a></li>
+<li><a href="#orgb25c9ec">2.3. Paso 3: Convertir la parte entera a binario</a></li>
+<li><a href="#org5d267e7">2.4. Paso 4: Convertir la parte fraccionaria a binario</a></li>
+<li><a href="#org06395b5">2.5. Paso 5: Unir entero y fracción</a></li>
+<li><a href="#org3ccc73e">2.6. Paso 6: Normalizar</a></li>
+<li><a href="#org99d571a">2.7. Paso 7: Calcular el exponente con bias</a></li>
+<li><a href="#orgd05a8c7">2.8. Paso 8: Calcular la mantisa</a></li>
+<li><a href="#orgd2b4dda">2.9. Paso 9: Construir el número IEEE 754 final</a></li>
+</ul>
+</li>
+<li><a href="#org766f6b9">3. Herramienta interactiva</a></li>
+<li><a href="#org5d92740">4. Ejemplo</a></li>
+<li><a href="#org1838410">5. Código</a></li>
+<li><a href="#org404809a">6. Regresar</a></li>
+<li><a href="#org85d623a">7. Fuentes</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org312424e" class="outline-2">
+<h2 id="org312424e"><span class="section-number-2">1.</span> IEEE</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org54e56fa" class="outline-3">
+<h3 id="org54e56fa"><span class="section-number-3">1.1.</span> Concepto</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+El estándar IEEE 754 es la representación más utilizada actualmente
+para números en punto flotante en computadoras, incluyendo PCs con
+procesadores Intel o AMD, sistemas Mac y la mayoría de plataformas
+Unix.
+</p>
+
+<p>
+<b>IEEE 754 define una representación eficiente basada en tres
+componentes principales:</b>
+</p>
+
+
+<p>
+<b>1. Bit de signo:</b> indica el signo del número. Un valor de 0 representa
+   un número positivo y 1 un número negativo.
+</p>
+
+<p>
+<b>2. Exponente sesgado:</b> permite representar exponentes positivos y
+   negativos mediante el uso de un sesgo (bias) de 127, el cual se suma al
+   exponente real para obtener el valor almacenado.
+</p>
+
+<p>
+<b>3. Mantisa o fracción normalizada:</b> representa los bits significativos
+   del número en base 2. En números normalizados, existe un 1
+   implícito a la izquierda del punto decimal que no se almacena
+   explícitamente.
+</p>
+
+<p>
+A continuación se presenta una herramienta interactiva que permite ingresar un
+número decimal y obtener su representación en formato IEEE 754 de 32 bits.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1182be" class="outline-2">
+<h2 id="orgc1182be"><span class="section-number-2">2.</span> Proceso manual de conversión</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+El formato IEEE 754 usa 32 bits(precisión simple):
+</p>
+
+<ul class="org-ul">
+<li>1 bit de <b>signo</b> (S)</li>
+<li>8 bits de <b>exponente</b> (E) = 127</li>
+<li>23 bits de <b>mantisa</b> (M)</li>
+</ul>
+
+<p>
+La representación final es:
+</p>
+<pre class="example" id="org2e9baaf">
+S | EEEEEEEE | MMMMMMMMMMMMMMMMMMMMMMM
+</pre>
+</div>
+
+<div id="outline-container-org21f12ab" class="outline-3">
+<h3 id="org21f12ab"><span class="section-number-3">2.1.</span> Paso 1: Determinar el signo</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Si el número es positivo: S = 0</li>
+<li>Si el número es negativo: S = 1</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org997800d" class="outline-3">
+<h3 id="org997800d"><span class="section-number-3">2.2.</span> Paso 2: Separar parte entera y fraccionaria</h3>
+</div>
+
+<div id="outline-container-orgb25c9ec" class="outline-3">
+<h3 id="orgb25c9ec"><span class="section-number-3">2.3.</span> Paso 3: Convertir la parte entera a binario</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Usamos divisiones sucesivas entre 2 y tomamos los residuos de abajo
+hacia arriba.
+</p>
+
+
+<p>
+Ejemplo (entero 13):
+</p>
+<pre class="example" id="org321a1b6">
+13/2=6 r1
+
+6/2=3 r0
+
+3/2=1 r1
+
+1/2=0 r1
+
+13 = 1101
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5d267e7" class="outline-3">
+<h3 id="org5d267e7"><span class="section-number-3">2.4.</span> Paso 4: Convertir la parte fraccionaria a binario</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Multiplicar repetidamente por 2 y tomar la parte entera en cada paso.
+</p>
+
+<p>
+Ejemplo (0.625):
+</p>
+<pre class="example" id="org43d7b8a">
+0.625×2 = 1.25    bit 1
+
+0.25×2  = 0.5     bit 0
+
+0.5×2   = 1.0     bit 1
+
+0.625 = 0.101
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org06395b5" class="outline-3">
+<h3 id="org06395b5"><span class="section-number-3">2.5.</span> Paso 5: Unir entero y fracción</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Combinar:
+N = (entero).(fracción) en binario
+</p>
+
+<p>
+Ejemplo:
+</p>
+<pre class="example" id="org2c4d688">
+13.625 -&gt; 1101.101
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org3ccc73e" class="outline-3">
+<h3 id="org3ccc73e"><span class="section-number-3">2.6.</span> Paso 6: Normalizar</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Mover el punto binario hasta que quede un solo 1 a la izquierda:
+</p>
+<pre class="example" id="orgc60fb4f">
+1101.101 = 1.101101 *  2^3
+</pre>
+
+<ul class="org-ul">
+<li>El exponente real es 3.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org99d571a" class="outline-3">
+<h3 id="org99d571a"><span class="section-number-3">2.7.</span> Paso 7: Calcular el exponente con bias</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+En precisión simple:
+</p>
+<pre class="example" id="orgfec2f43">
+E = n + 127
+</pre>
+
+<p>
+Ejemplo:
+</p>
+<pre class="example" id="org00f17ec">
+n = 3 -&gt;  E = 3 + 127 = 130
+</pre>
+
+<p>
+Convertir 130 a binario (8 bits):
+</p>
+<pre class="example" id="org806dd1a">
+130 = 10000010
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd05a8c7" class="outline-3">
+<h3 id="orgd05a8c7"><span class="section-number-3">2.8.</span> Paso 8: Calcular la mantisa</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+La mantisa son los bits después del “1.” en la normalización,
+rellenando con ceros hasta completar 23 bits.
+</p>
+
+<p>
+Ejemplo:
+</p>
+<pre class="example" id="org13bbab0">
+1.101101 -&gt; mantisa = 10110100000000000000000 (23 bits)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd2b4dda" class="outline-3">
+<h3 id="orgd2b4dda"><span class="section-number-3">2.9.</span> Paso 9: Construir el número IEEE 754 final</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+Concatenar:
+</p>
+<pre class="example" id="org234711e">
+S (1 bit) | E (8 bits) | M (23 bits)
+</pre>
+
+<p>
+Ejemplo final (13.625):
+</p>
+
+<pre class="example" id="orgc1f07c5">
+S = 0
+
+E = 10000010
+
+M = 10110100000000000000000
+
+
+IEEE 754:
+
+0 10000010 10110100000000000000000
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org766f6b9" class="outline-2">
+<h2 id="org766f6b9"><span class="section-number-2">3.</span> Herramienta interactiva</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+La siguiente herramienta utiliza JavaScript para convertir un número
+decimal ingresado por el usuario a su representación IEEE 754 de
+precisión simple (32 bits), mostrando de forma separada el bit de
+signo, el exponente y la mantisa.
+</p>
+
+
+
+<p>
+Ingrese un número decimal para obtener su representación en formato IEEE 754.
+</p>
+
+<div style="margin-bottom:15px;">
+  <input type="number" id="decimal" step="any" placeholder="Número decimal">
+  <button onclick="convertir()">Convertir</button>
+</div>
+
+<p><strong>IEEE 754 (32 bits):</strong></p>
+<code id="binario"></code>
+
+<p><strong>Signo:</strong> <span id="signo"></span></p>
+<p><strong>Exponente:</strong> <span id="exponente"></span></p>
+<p><strong>Mantisa:</strong> <span id="mantisa"></span></p>
+
+<script>
+function convertir() {
+  let valor = parseFloat(document.getElementById("decimal").value);
+
+  if (isNaN(valor)) {
+    alert("Ingrese un número válido");
+    return;
+  }
+
+  let buffer = new ArrayBuffer(4);
+  let view = new DataView(buffer);
+  view.setFloat32(0, valor);
+
+  let binario = "";
+  for (let i = 0; i < 4; i++) {
+    let byte = view.getUint8(i).toString(2).padStart(8, "0");
+    binario += byte;
+  }
+
+  document.getElementById("binario").innerText = binario;
+  document.getElementById("signo").innerText = binario.substring(0, 1);
+  document.getElementById("exponente").innerText = binario.substring(1, 9);
+  document.getElementById("mantisa").innerText = binario.substring(9);
+}
+</script>
+</div>
+</div>
+
+
+<div id="outline-container-org5d92740" class="outline-2">
+<h2 id="org5d92740"><span class="section-number-2">4.</span> Ejemplo</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Para el número decimal 10.75, la representación IEEE 754 de 32 bits
+debe salir:
+</p>
+
+<pre class="example" id="orgccb2dbe">
+- Signo: 0  
+- Exponente: 10000010  
+- Mantisa: 01011000000000000000000
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org1838410" class="outline-2">
+<h2 id="org1838410"><span class="section-number-2">5.</span> Código</h2>
+<div class="outline-text-2" id="text-5">
+<pre class="example">
+&lt;div style="margin-bottom:15px;"&gt;
+  &lt;input type="number" id="decimal" step="any" placeholder="Número decimal"&gt;
+  &lt;button onclick="convertir()"&gt;Convertir&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;IEEE 754 (32 bits):&lt;/strong&gt;&lt;/p&gt;
+&lt;code id="binario"&gt;&lt;/code&gt;
+
+&lt;p&gt;&lt;strong&gt;Signo:&lt;/strong&gt; &lt;span id="signo"&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Exponente:&lt;/strong&gt; &lt;span id="exponente"&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mantisa:&lt;/strong&gt; &lt;span id="mantisa"&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function convertir() {
+  let valor = parseFloat(document.getElementById("decimal").value);
+
+  if (isNaN(valor)) {
+    alert("Ingrese un número válido");
+    return;
+  }
+
+  let buffer = new ArrayBuffer(4);
+  let view = new DataView(buffer);
+  view.setFloat32(0, valor);
+
+  let binario = "";
+  for (let i = 0; i &lt; 4; i++) {
+    let byte = view.getUint8(i).toString(2).padStart(8, "0");
+    binario += byte;
+  }
+
+  document.getElementById("binario").innerText = binario;
+  document.getElementById("signo").innerText = binario.substring(0, 1);
+  document.getElementById("exponente").innerText = binario.substring(1, 9);
+  document.getElementById("mantisa").innerText = binario.substring(9);
+}
+&lt;/script&gt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org404809a" class="outline-2">
+<h2 id="org404809a"><span class="section-number-2">6.</span> Regresar</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+<a href="index.html">HOME</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org85d623a" class="outline-2">
+<h2 id="org85d623a"><span class="section-number-2">7.</span> Fuentes</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<a href="https://www.geeksforgeeks.org/computer-organization-architecture/ieee-standard-754-floating-point-numbers/">https://www.geeksforgeeks.org/computer-organization-architecture/ieee-standard-754-floating-point-numbers/</a>
+</p>
+
+<p>
+<a href="https://www-w3schools-com.translate.goog/js/js_syntax.asp?_x_tr_sl=en&amp;_x_tr_tl=es&amp;_x_tr_hl=es&amp;_x_tr_pto=tc">https://www-w3schools-com.translate.goog/js/js_syntax.asp?_x_tr_sl=en&amp;_x_tr_tl=es&amp;_x_tr_hl=es&amp;_x_tr_pto=tc</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Fecha: 2026-01-22</p>
+<p class="author">Autor: Elvis Carlosama, Samuel Crespo, Juan Quinatoa, Alejandro Navarrete</p>
+<p class="date">Created: 2026-01-25 Sun 03:27</p>
+</div>
+</body>
+</html>

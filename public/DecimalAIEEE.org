@@ -1,0 +1,269 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil expand-links:t f:t
+#+options: inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+title: Representación IEEE 754
+#+date: 2026-01-22
+#+author: Elvis Carlosama, Samuel Crespo, Juan Quinatoa, Alejandro Navarrete
+#+email: elvis.carlosama@epn.edu.ec, samuel.crespo@epn.edu.ec, dennis.navarrete@epn.edu.ec, juan.quinatoa@epn.edu.ec
+#+language: es
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.7.5)
+#+cite_export:
+
+* IEEE
+** Concepto
+
+El estándar IEEE 754 es la representación más utilizada actualmente
+para números en punto flotante en computadoras, incluyendo PCs con
+procesadores Intel o AMD, sistemas Mac y la mayoría de plataformas
+Unix.
+
+*IEEE 754 define una representación eficiente basada en tres
+componentes principales:*
+
+
+*1. Bit de signo:* indica el signo del número. Un valor de 0 representa
+   un número positivo y 1 un número negativo.
+  
+*2. Exponente sesgado:* permite representar exponentes positivos y
+   negativos mediante el uso de un sesgo (bias) de 127, el cual se suma al
+   exponente real para obtener el valor almacenado.
+  
+*3. Mantisa o fracción normalizada:* representa los bits significativos
+   del número en base 2. En números normalizados, existe un 1
+   implícito a la izquierda del punto decimal que no se almacena
+   explícitamente.
+
+A continuación se presenta una herramienta interactiva que permite ingresar un
+número decimal y obtener su representación en formato IEEE 754 de 32 bits.
+
+* Proceso manual de conversión
+
+El formato IEEE 754 usa 32 bits(precisión simple):
+
+- 1 bit de *signo* (S)
+- 8 bits de *exponente* (E) = 127
+- 23 bits de *mantisa* (M)
+
+La representación final es:
+#+begin_example
+S | EEEEEEEE | MMMMMMMMMMMMMMMMMMMMMMM
+#+end_example
+
+** Paso 1: Determinar el signo
+- Si el número es positivo: S = 0
+- Si el número es negativo: S = 1
+
+** Paso 2: Separar parte entera y fraccionaria
+
+** Paso 3: Convertir la parte entera a binario
+Usamos divisiones sucesivas entre 2 y tomamos los residuos de abajo
+hacia arriba.
+
+
+Ejemplo (entero 13):
+#+begin_example
+13/2=6 r1
+
+6/2=3 r0
+
+3/2=1 r1
+
+1/2=0 r1
+
+13 = 1101
+#+end_example
+
+** Paso 4: Convertir la parte fraccionaria a binario
+Multiplicar repetidamente por 2 y tomar la parte entera en cada paso.
+
+Ejemplo (0.625):
+#+begin_example
+0.625×2 = 1.25    bit 1
+
+0.25×2  = 0.5     bit 0
+
+0.5×2   = 1.0     bit 1
+
+0.625 = 0.101
+#+end_example
+
+** Paso 5: Unir entero y fracción
+Combinar:
+N = (entero).(fracción) en binario
+
+Ejemplo:
+#+begin_example
+13.625 -> 1101.101
+#+end_example
+
+** Paso 6: Normalizar
+Mover el punto binario hasta que quede un solo 1 a la izquierda:
+#+begin_example
+1101.101 = 1.101101 *  2^3
+#+end_example
+
+- El exponente real es 3.
+
+** Paso 7: Calcular el exponente con bias
+En precisión simple:
+#+begin_example
+E = n + 127
+#+end_example
+
+Ejemplo:
+#+begin_example
+n = 3 ->  E = 3 + 127 = 130
+#+end_example
+
+Convertir 130 a binario (8 bits):
+#+begin_example
+130 = 10000010
+#+end_example
+
+** Paso 8: Calcular la mantisa
+La mantisa son los bits después del “1.” en la normalización,
+rellenando con ceros hasta completar 23 bits.
+
+Ejemplo:
+#+begin_example
+1.101101 -> mantisa = 10110100000000000000000 (23 bits)
+#+end_example
+
+** Paso 9: Construir el número IEEE 754 final
+Concatenar:
+#+begin_example
+S (1 bit) | E (8 bits) | M (23 bits)
+#+end_example
+
+Ejemplo final (13.625):
+
+#+begin_example
+S = 0
+
+E = 10000010
+
+M = 10110100000000000000000
+
+
+IEEE 754:
+
+0 10000010 10110100000000000000000
+#+end_example
+
+* Herramienta interactiva
+La siguiente herramienta utiliza JavaScript para convertir un número
+decimal ingresado por el usuario a su representación IEEE 754 de
+precisión simple (32 bits), mostrando de forma separada el bit de
+signo, el exponente y la mantisa.
+
+
+
+Ingrese un número decimal para obtener su representación en formato IEEE 754.
+
+#+begin_export html
+<div style="margin-bottom:15px;">
+  <input type="number" id="decimal" step="any" placeholder="Número decimal">
+  <button onclick="convertir()">Convertir</button>
+</div>
+
+<p><strong>IEEE 754 (32 bits):</strong></p>
+<code id="binario"></code>
+
+<p><strong>Signo:</strong> <span id="signo"></span></p>
+<p><strong>Exponente:</strong> <span id="exponente"></span></p>
+<p><strong>Mantisa:</strong> <span id="mantisa"></span></p>
+
+<script>
+function convertir() {
+  let valor = parseFloat(document.getElementById("decimal").value);
+
+  if (isNaN(valor)) {
+    alert("Ingrese un número válido");
+    return;
+  }
+
+  let buffer = new ArrayBuffer(4);
+  let view = new DataView(buffer);
+  view.setFloat32(0, valor);
+
+  let binario = "";
+  for (let i = 0; i < 4; i++) {
+    let byte = view.getUint8(i).toString(2).padStart(8, "0");
+    binario += byte;
+  }
+
+  document.getElementById("binario").innerText = binario;
+  document.getElementById("signo").innerText = binario.substring(0, 1);
+  document.getElementById("exponente").innerText = binario.substring(1, 9);
+  document.getElementById("mantisa").innerText = binario.substring(9);
+}
+</script>
+#+end_export
+
+
+* Ejemplo
+
+Para el número decimal 10.75, la representación IEEE 754 de 32 bits
+debe salir:
+
+#+begin_example
+- Signo: 0  
+- Exponente: 10000010  
+- Mantisa: 01011000000000000000000
+#+end_example
+
+* Código
+
+#+begin_src
+<div style="margin-bottom:15px;">
+  <input type="number" id="decimal" step="any" placeholder="Número decimal">
+  <button onclick="convertir()">Convertir</button>
+</div>
+
+<p><strong>IEEE 754 (32 bits):</strong></p>
+<code id="binario"></code>
+
+<p><strong>Signo:</strong> <span id="signo"></span></p>
+<p><strong>Exponente:</strong> <span id="exponente"></span></p>
+<p><strong>Mantisa:</strong> <span id="mantisa"></span></p>
+
+<script>
+function convertir() {
+  let valor = parseFloat(document.getElementById("decimal").value);
+
+  if (isNaN(valor)) {
+    alert("Ingrese un número válido");
+    return;
+  }
+
+  let buffer = new ArrayBuffer(4);
+  let view = new DataView(buffer);
+  view.setFloat32(0, valor);
+
+  let binario = "";
+  for (let i = 0; i < 4; i++) {
+    let byte = view.getUint8(i).toString(2).padStart(8, "0");
+    binario += byte;
+  }
+
+  document.getElementById("binario").innerText = binario;
+  document.getElementById("signo").innerText = binario.substring(0, 1);
+  document.getElementById("exponente").innerText = binario.substring(1, 9);
+  document.getElementById("mantisa").innerText = binario.substring(9);
+}
+</script>
+#+end_src
+
+* Regresar
+
+[[file:index.org][Home]]
+
+* Fuentes
+https://www.geeksforgeeks.org/computer-organization-architecture/ieee-standard-754-floating-point-numbers/
+
+https://www-w3schools-com.translate.goog/js/js_syntax.asp?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc
+

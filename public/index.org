@@ -76,6 +76,9 @@ tree
 ├── CityTemperatureAnalysis.ipynb
 ├── clima-portoviejo-hoy.csv
 ├── get-weather.sh
+├── iframe_figures
+│   ├── figure_13.html
+│   └── figure_15.html
 ├── images
 │   ├── humidity.png
 │   ├── pressure.png
@@ -83,27 +86,29 @@ tree
 ├── main.py
 ├── output.log
 ├── public
+│   ├── DecimalAIEEE.org
 │   ├── images
 │   │   ├── humidity.png
 │   │   ├── pressure.png
 │   │   └── temperature_style.png
 │   ├── index.org
-│   ├── index.org:Zone.Identifier
-│   ├── index.pdf
-│   └── index.pdf:Zone.Identifier
+│   └── index.pdf
 └── weather-site
     ├── build-site.el
     ├── build.sh
     ├── content
+    │   ├── #DecimalAIEEE.org#
+    │   ├── DecimalAIEEE.org
+    │   ├── analisis.org
     │   ├── images
     │   │   ├── humidity.png
-    │   │   ├── plot.png
     │   │   ├── pressure.png
     │   │   ├── temperature.png
     │   │   └── temperature_style.png
-    │   ├── index.org
-    │   └── index.org_archive
+    │   └── index.org
     └── public
+        ├── CityTemperatureAnalysis.html
+        ├── DecimalAIEEE.html
         ├── images
         │   ├── humidity.png
         │   ├── plot.png
@@ -112,7 +117,7 @@ tree
         │   └── temperature_style.png
         └── index.html
 
-9 directories, 30 files
+10 directories, 34 files
 #+end_example
 
 ** Formulación del Problema
@@ -162,7 +167,7 @@ EXPECTED_COLUMNS = [
     'wind_speed', 'wind_deg', 'wind_gust', 'clouds_all', 'sys_type', 
     'sys_id', 'sys_country', 'sys_sunrise', 'sys_sunset', 'timezone', 
     'id', 'name', 'cod'
-]
+] 
 # 3. Funciones necesarias.
 def get_weather():
     try:
@@ -559,7 +564,7 @@ print(f"Dataset cargado. Filas: {df.shape[0]}, Columnas: {df.shape[1]}")
 #+end_src
 
 #+RESULTS:
-: Dataset cargado. Filas: 1, Columnas: 30
+: Dataset cargado. Filas: 28, Columnas: 30
 
 #+begin_src python :results value table :exports both :return table :python /home/alejandro/miniforge3/envs/iccd332/bin/python
 import pandas as pd
@@ -578,16 +583,16 @@ table
 #+RESULTS:
 | dt                  | coord_lon | coord_lat | weather_0_id | weather_0_main | weather_0_description | weather_0_icon | base     | main_temp | main_feels_like | main_temp_min | main_temp_max | main_pressure | main_humidity | main_sea_level | main_grnd_level | visibility | wind_speed | wind_deg | wind_gust | clouds_all | sys_type | sys_id | sys_country | sys_sunrise         | sys_sunset          | timezone |      id | name       | cod |
 |---------------------+-----------+-----------+--------------+----------------+-----------------------+----------------+----------+-----------+-----------------+---------------+---------------+---------------+---------------+----------------+-----------------+------------+------------+----------+-----------+------------+----------+--------+-------------+---------------------+---------------------+----------+---------+------------+-----|
-| 2026-01-20 05:30:10 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     23.94 |           24.69 |         23.94 |         23.94 |          1011 |            88 |           1011 |            1006 |      10000 |       0.63 |       26 |      0.79 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 04:15:09 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     23.92 |           24.64 |         23.92 |         23.92 |          1010 |            87 |           1010 |            1005 |      10000 |       0.27 |      172 |      0.59 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 04:45:12 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     23.89 |           24.63 |         23.89 |         23.89 |          1010 |            88 |           1010 |            1005 |      10000 |       0.41 |      344 |      0.52 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-21 04:45:02 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |      24.7 |           25.29 |          24.7 |          24.7 |          1010 |            79 |           1010 |            1005 |      10000 |       0.65 |      226 |      0.95 |        100 |      nan |    nan | EC          | 2026-01-21 06:27:54 | 2026-01-21 18:38:01 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-21 05:00:03 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |      24.7 |           25.29 |          24.7 |          24.7 |          1010 |            79 |           1010 |            1005 |      10000 |       0.65 |      226 |      0.95 |        100 |      nan |    nan | EC          | 2026-01-21 06:27:54 | 2026-01-21 18:38:01 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 06:30:10 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04d            | stations |     25.82 |            26.7 |         25.82 |         25.82 |          1012 |            86 |           1012 |            1007 |      10000 |       1.32 |      326 |      1.67 |         99 |      1.0 | 8552.0 | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-21 05:10:55 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |      24.7 |           25.29 |          24.7 |          24.7 |          1010 |            79 |           1010 |            1005 |      10000 |       0.65 |      226 |      0.95 |        100 |      nan |    nan | EC          | 2026-01-21 06:27:54 | 2026-01-21 18:38:01 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 05:45:10 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     23.94 |           24.69 |         23.94 |         23.94 |          1011 |            88 |           1011 |            1006 |      10000 |       0.63 |       26 |      0.79 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 05:00:07 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     23.89 |           24.63 |         23.89 |         23.89 |          1010 |            88 |           1010 |            1005 |      10000 |       0.41 |      344 |      0.52 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
-| 2026-01-20 06:00:11 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     23.94 |           24.69 |         23.94 |         23.94 |          1011 |            88 |           1011 |            1006 |      10000 |       0.63 |       26 |      0.79 |        100 |      nan |    nan | EC          | 2026-01-20 06:27:35 | 2026-01-20 18:37:44 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 19:45:07 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     26.82 |           29.69 |         26.82 |         26.82 |          1012 |            84 |           1012 |            1007 |      10000 |       2.71 |      244 |      4.25 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 22:15:07 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     25.82 |           26.68 |         25.82 |         25.82 |          1014 |            85 |           1014 |            1009 |      10000 |       2.21 |      224 |      3.09 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-25 03:00:02 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     24.24 |           24.99 |         24.24 |         24.24 |          1011 |            87 |           1011 |            1006 |      10000 |       1.17 |      167 |      1.76 |        100 |      nan |    nan | EC          | 2026-01-25 06:29:03 | 2026-01-25 18:38:58 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-25 02:00:02 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     24.37 |           25.13 |         24.37 |         24.37 |          1012 |            87 |           1012 |            1007 |      10000 |       1.47 |      169 |      2.23 |        100 |      nan |    nan | EC          | 2026-01-25 06:29:03 | 2026-01-25 18:38:58 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 21:30:07 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     25.82 |           26.68 |         25.82 |         25.82 |          1014 |            85 |           1014 |            1009 |      10000 |       2.21 |      224 |      3.09 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-25 01:15:02 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     24.32 |           25.08 |         24.32 |         24.32 |          1013 |            87 |           1013 |            1008 |      10000 |       1.62 |      189 |      2.33 |        100 |      nan |    nan | EC          | 2026-01-25 06:29:03 | 2026-01-25 18:38:58 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-25 00:15:09 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     24.43 |            25.2 |         24.43 |         24.43 |          1014 |            87 |           1014 |            1009 |      10000 |       1.56 |      198 |      2.23 |        100 |      nan |    nan | EC          | 2026-01-25 06:29:03 | 2026-01-25 18:38:58 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 22:30:08 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     25.82 |            26.7 |         25.82 |         25.82 |          1014 |            86 |           1014 |            1009 |      10000 |       2.01 |      216 |      2.95 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 20:00:08 |  -80.4544 |   -1.0546 |          804 | Clouds         | overcast clouds       | 04n            | stations |     26.82 |           29.69 |         26.82 |         26.82 |          1012 |            84 |           1012 |            1007 |      10000 |       2.71 |      244 |      4.25 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
+| 2026-01-24 22:00:09 |  -80.4544 |   -1.0546 |          500 | Rain           | light rain            | 10n            | stations |     25.82 |           26.68 |         25.82 |         25.82 |          1014 |            85 |           1014 |            1009 |      10000 |       2.21 |      224 |      3.09 |        100 |      1.0 | 8552.0 | EC          | 2026-01-24 06:28:47 | 2026-01-24 18:38:45 |   -18000 | 3652941 | Portoviejo | 200 |
 
 
 * Gráfica de la Temperatura en el Tiempo.
@@ -744,6 +749,7 @@ fi
 #+RESULTS:
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/humidity.png'
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/pressure.png'
+: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/temperature.png'
 : '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/weather-site/public/images/temperature_style.png'
 : Sincronización: Imágenes copiadas de content a public.
 
@@ -778,15 +784,19 @@ fi
 #+end_src
 
 #+RESULTS:
-: Copiando a /home/alejandro/PortoviejoWeather/images...
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/images/humidity.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/images/pressure.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/images/temperature_style.png'
-: Copiando a /home/alejandro/PortoviejoWeather/public/images...
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/public/images/humidity.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/public/images/pressure.png'
-: '/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/public/images/temperature_style.png'
-: Sincronizacion completada en todos los destinos.
+#+begin_example
+Copiando a /home/alejandro/PortoviejoWeather/images...
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/images/humidity.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/images/pressure.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature.png' -> '/home/alejandro/PortoviejoWeather/images/temperature.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/images/temperature_style.png'
+Copiando a /home/alejandro/PortoviejoWeather/public/images...
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/humidity.png' -> '/home/alejandro/PortoviejoWeather/public/images/humidity.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/pressure.png' -> '/home/alejandro/PortoviejoWeather/public/images/pressure.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature.png' -> '/home/alejandro/PortoviejoWeather/public/images/temperature.png'
+'/home/alejandro/PortoviejoWeather/weather-site/content/images/temperature_style.png' -> '/home/alejandro/PortoviejoWeather/public/images/temperature_style.png'
+Sincronizacion completada en todos los destinos.
+#+end_example
 
 
 * Generación del Sitio Web
@@ -814,8 +824,19 @@ echo "--- PROCESO FINALIZADO: Sitio web actualizado y listo para visualizar ---"
 : Archivo index.org actualizado.
 : --- PROCESO FINALIZADO: Sitio web actualizado y listo para visualizar ---
 
+* Programa de Conversión
+
+[[file:DecimalAIEEE.org][Conversión Decimal a IEEE]]
+
+
+* Análisis del Clima Jupyter
+
+[[file:CityTemperatureAnalysis.html][Análisis del Clima]]
+
 * Footnotes
+
 
 [fn:1] Recuerde que su máquina ha de disponer de un entorno de
 anaconda/mamba denominado iccd332 en el cual se dispone del interprete
 de Python
+

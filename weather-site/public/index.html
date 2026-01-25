@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
-<!-- 2026-01-21 Wed 05:56 -->
+<!-- 2026-01-25 Sun 03:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Proyecto ICCD332 Arquitectura de Computadores</title>
@@ -241,33 +241,36 @@
 <h2>&Iacute;ndice</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5273c1f">1. City Weather APP</a>
+<li><a href="#org74089c4">1. City Weather APP</a>
 <ul>
-<li><a href="#org998983a">1.1. Estructura del proyecto</a></li>
-<li><a href="#orge37358c">1.2. Formulación del Problema</a></li>
-<li><a href="#org4b77f4a">1.3. Descripción del código</a></li>
-<li><a href="#org8968b0c">1.4. Script ejecutable sh</a></li>
-<li><a href="#org9ab6d5b">1.5. Configuración de Crontab</a></li>
+<li><a href="#org5ebfdff">1.1. Estructura del proyecto</a></li>
+<li><a href="#orgdb7a187">1.2. Formulación del Problema</a></li>
+<li><a href="#org52395f6">1.3. Descripción del código</a></li>
+<li><a href="#org033b543">1.4. Script ejecutable sh</a></li>
+<li><a href="#orgd3fbdad">1.5. Configuración de Crontab</a></li>
 </ul>
 </li>
-<li><a href="#org986898e">2. Presentación de resultados</a>
+<li><a href="#orge669fe1">2. Presentación de resultados</a>
 <ul>
-<li><a href="#org71499f0">2.1. Muestra Aleatoria de datos</a></li>
+<li><a href="#orgea31419">2.1. Muestra Aleatoria de datos</a></li>
 </ul>
 </li>
-<li><a href="#org59b3945">3. Gráfica de la Temperatura en el Tiempo.</a>
+<li><a href="#org103bcf2">3. Gráfica de la Temperatura en el Tiempo.</a>
 <ul>
-<li><a href="#orgfc7afc2">3.1. Gráfica de Humedad con respecto al Tiempo.</a></li>
-<li><a href="#org9d220f4">3.2. Gráfica de Presión Atmosférica.</a></li>
+<li><a href="#orgcb3a9c8">3.1. Gráfica de Humedad con respecto al Tiempo.</a></li>
+<li><a href="#org65f3fa7">3.2. Gráfica de Presión Atmosférica.</a></li>
 </ul>
 </li>
-<li><a href="#orgf8fdf48">4. Sincronización y Configuración del Servidor</a></li>
-<li><a href="#org4281ade">5. Generación del Sitio Web</a></li>
+<li><a href="#orgf382be9">4. Sincronización y Configuración del Servidor</a></li>
+<li><a href="#org7b60417">5. Sincronización para todo el Directorio.</a></li>
+<li><a href="#org403f6f9">6. Generación del Sitio Web</a></li>
+<li><a href="#org6c8ec5c">7. Programa de Conversión</a></li>
+<li><a href="#orga8b40ab">8. Análisis del Clima Jupyter</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org5273c1f" class="outline-2">
-<h2 id="org5273c1f"><span class="section-number-2">1.</span> City Weather APP</h2>
+<div id="outline-container-org74089c4" class="outline-2">
+<h2 id="org74089c4"><span class="section-number-2">1.</span> City Weather APP</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Este es el proyecto de fin de semestre en donde se pretende demostrar
@@ -283,8 +286,8 @@ las destrezas obtenidas durante el transcurso de la asignatura de
 </ol>
 </div>
 
-<div id="outline-container-org998983a" class="outline-3">
-<h3 id="org998983a"><span class="section-number-3">1.1.</span> Estructura del proyecto</h3>
+<div id="outline-container-org5ebfdff" class="outline-3">
+<h3 id="org5ebfdff"><span class="section-number-3">1.1.</span> Estructura del proyecto</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Se recomienda que el proyecto se cree en el <i>home</i> del sistema
@@ -334,11 +337,14 @@ subdirectorios. Adaptar los nombres de los archivos según las ciudades
 específicas del grupo.
 </p>
 
-<pre class="example" id="orgd50e9c8">
+<pre class="example" id="org8ea3970">
 .
 ├── CityTemperatureAnalysis.ipynb
 ├── clima-portoviejo-hoy.csv
 ├── get-weather.sh
+├── iframe_figures
+│   ├── figure_13.html
+│   └── figure_15.html
 ├── images
 │   ├── humidity.png
 │   ├── pressure.png
@@ -346,27 +352,29 @@ específicas del grupo.
 ├── main.py
 ├── output.log
 ├── public
+│   ├── DecimalAIEEE.org
 │   ├── images
 │   │   ├── humidity.png
 │   │   ├── pressure.png
 │   │   └── temperature_style.png
 │   ├── index.org
-│   ├── index.org:Zone.Identifier
-│   ├── index.pdf
-│   └── index.pdf:Zone.Identifier
+│   └── index.pdf
 └── weather-site
     ├── build-site.el
     ├── build.sh
     ├── content
+    │   ├── #DecimalAIEEE.org#
+    │   ├── DecimalAIEEE.org
+    │   ├── analisis.org
     │   ├── images
     │   │   ├── humidity.png
-    │   │   ├── plot.png
     │   │   ├── pressure.png
     │   │   ├── temperature.png
     │   │   └── temperature_style.png
-    │   ├── index.org
-    │   └── index.org_archive
+    │   └── index.org
     └── public
+        ├── CityTemperatureAnalysis.html
+        ├── DecimalAIEEE.html
         ├── images
         │   ├── humidity.png
         │   ├── plot.png
@@ -375,13 +383,13 @@ específicas del grupo.
         │   └── temperature_style.png
         └── index.html
 
-9 directories, 30 files
+10 directories, 34 files
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orge37358c" class="outline-3">
-<h3 id="orge37358c"><span class="section-number-3">1.2.</span> Formulación del Problema</h3>
+<div id="outline-container-orgdb7a187" class="outline-3">
+<h3 id="orgdb7a187"><span class="section-number-3">1.2.</span> Formulación del Problema</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Se desea realizar un registro climatológico de una ciudad
@@ -435,7 +443,7 @@ programa Python/Java.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-b
     <span style="font-style: italic;">'wind_speed'</span>, <span style="font-style: italic;">'wind_deg'</span>, <span style="font-style: italic;">'wind_gust'</span>, <span style="font-style: italic;">'clouds_all'</span>, <span style="font-style: italic;">'sys_type'</span>, 
     <span style="font-style: italic;">'sys_id'</span>, <span style="font-style: italic;">'sys_country'</span>, <span style="font-style: italic;">'sys_sunrise'</span>, <span style="font-style: italic;">'sys_sunset'</span>, <span style="font-style: italic;">'timezone'</span>, 
     <span style="font-style: italic;">'id'</span>, <span style="font-style: italic;">'name'</span>, <span style="font-style: italic;">'cod'</span>
-]
+] 
 <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Funciones necesarias.
 </span><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">get_weather</span>():
     <span style="font-weight: bold;">try</span>:
@@ -610,8 +618,8 @@ git remote add origin https://github.com/dannstrak/PortoviejoWeather.git
 </div>
 </div>
 
-<div id="outline-container-org4b77f4a" class="outline-3">
-<h3 id="org4b77f4a"><span class="section-number-3">1.3.</span> Descripción del código</h3>
+<div id="outline-container-org52395f6" class="outline-3">
+<h3 id="org52395f6"><span class="section-number-3">1.3.</span> Descripción del código</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 A continuación se detalla el funcionamiento del script principal
@@ -852,8 +860,8 @@ Finalmente, se cierran los bloques condicionales manejando errores de conexión 
 </div>
 </div>
 
-<div id="outline-container-org8968b0c" class="outline-3">
-<h3 id="org8968b0c"><span class="section-number-3">1.4.</span> Script ejecutable sh</h3>
+<div id="outline-container-org033b543" class="outline-3">
+<h3 id="org033b543"><span class="section-number-3">1.4.</span> Script ejecutable sh</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Se coloca el contenido del script ejecutable. Recuerde que se debe
@@ -916,8 +924,8 @@ Finalmente convierta en ejecutable como se explicó en clases y laboratorio.
 </div>
 </div>
 
-<div id="outline-container-org9ab6d5b" class="outline-3">
-<h3 id="org9ab6d5b"><span class="section-number-3">1.5.</span> Configuración de Crontab</h3>
+<div id="outline-container-orgd3fbdad" class="outline-3">
+<h3 id="orgd3fbdad"><span class="section-number-3">1.5.</span> Configuración de Crontab</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 Se indica la configuración realizada en crontab para la adquisición de datos
@@ -939,8 +947,8 @@ del programa como los errores en la ejecución.</li>
 </div>
 
 
-<div id="outline-container-org986898e" class="outline-2">
-<h2 id="org986898e"><span class="section-number-2">2.</span> Presentación de resultados</h2>
+<div id="outline-container-orge669fe1" class="outline-2">
+<h2 id="orge669fe1"><span class="section-number-2">2.</span> Presentación de resultados</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Para la pressentación de resultados se utilizan las librerías de Python:
@@ -961,8 +969,8 @@ install &lt;nombre-paquete&gt;</code>
 </div>
 
 
-<div id="outline-container-org71499f0" class="outline-3">
-<h3 id="org71499f0"><span class="section-number-3">2.1.</span> Muestra Aleatoria de datos</h3>
+<div id="outline-container-orgea31419" class="outline-3">
+<h3 id="orgea31419"><span class="section-number-3">2.1.</span> Muestra Aleatoria de datos</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="font-weight: bold;">import</span> os
@@ -973,7 +981,7 @@ install &lt;nombre-paquete&gt;</code>
 </div>
 
 <pre class="example">
-Dataset cargado. Filas: 1, Columnas: 30
+Dataset cargado. Filas: 28, Columnas: 30
 </pre>
 
 
@@ -1092,7 +1100,7 @@ table
 </thead>
 <tbody>
 <tr>
-<td class="org-left">2026-01-20 05:30:10</td>
+<td class="org-left">2026-01-24 19:45:07</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">804</td>
@@ -1100,24 +1108,90 @@ table
 <td class="org-left">overcast clouds</td>
 <td class="org-left">04n</td>
 <td class="org-left">stations</td>
-<td class="org-right">23.94</td>
-<td class="org-right">24.69</td>
-<td class="org-right">23.94</td>
-<td class="org-right">23.94</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.69</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1012</td>
+<td class="org-right">84</td>
+<td class="org-right">1012</td>
+<td class="org-right">1007</td>
+<td class="org-right">10000</td>
+<td class="org-right">2.71</td>
+<td class="org-right">244</td>
+<td class="org-right">4.25</td>
+<td class="org-right">100</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-24 22:15:07</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">500</td>
+<td class="org-left">Rain</td>
+<td class="org-left">light rain</td>
+<td class="org-left">10n</td>
+<td class="org-left">stations</td>
+<td class="org-right">25.82</td>
+<td class="org-right">26.68</td>
+<td class="org-right">25.82</td>
+<td class="org-right">25.82</td>
+<td class="org-right">1014</td>
+<td class="org-right">85</td>
+<td class="org-right">1014</td>
+<td class="org-right">1009</td>
+<td class="org-right">10000</td>
+<td class="org-right">2.21</td>
+<td class="org-right">224</td>
+<td class="org-right">3.09</td>
+<td class="org-right">100</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
+<td class="org-left">EC</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
+<td class="org-right">-18000</td>
+<td class="org-right">3652941</td>
+<td class="org-left">Portoviejo</td>
+<td class="org-right">200</td>
+</tr>
+
+<tr>
+<td class="org-left">2026-01-25 03:00:02</td>
+<td class="org-right">-80.4544</td>
+<td class="org-right">-1.0546</td>
+<td class="org-right">500</td>
+<td class="org-left">Rain</td>
+<td class="org-left">light rain</td>
+<td class="org-left">10n</td>
+<td class="org-left">stations</td>
+<td class="org-right">24.24</td>
+<td class="org-right">24.99</td>
+<td class="org-right">24.24</td>
+<td class="org-right">24.24</td>
 <td class="org-right">1011</td>
-<td class="org-right">88</td>
+<td class="org-right">87</td>
 <td class="org-right">1011</td>
 <td class="org-right">1006</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.63</td>
-<td class="org-right">26</td>
-<td class="org-right">0.79</td>
+<td class="org-right">1.17</td>
+<td class="org-right">167</td>
+<td class="org-right">1.76</td>
 <td class="org-right">100</td>
 <td class="org-right">nan</td>
 <td class="org-right">nan</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
+<td class="org-left">2026-01-25 06:29:03</td>
+<td class="org-left">2026-01-25 18:38:58</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1125,7 +1199,7 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-20 04:15:09</td>
+<td class="org-left">2026-01-25 02:00:02</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">500</td>
@@ -1133,24 +1207,24 @@ table
 <td class="org-left">light rain</td>
 <td class="org-left">10n</td>
 <td class="org-left">stations</td>
-<td class="org-right">23.92</td>
-<td class="org-right">24.64</td>
-<td class="org-right">23.92</td>
-<td class="org-right">23.92</td>
-<td class="org-right">1010</td>
+<td class="org-right">24.37</td>
+<td class="org-right">25.13</td>
+<td class="org-right">24.37</td>
+<td class="org-right">24.37</td>
+<td class="org-right">1012</td>
 <td class="org-right">87</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">1012</td>
+<td class="org-right">1007</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.27</td>
-<td class="org-right">172</td>
-<td class="org-right">0.59</td>
+<td class="org-right">1.47</td>
+<td class="org-right">169</td>
+<td class="org-right">2.23</td>
 <td class="org-right">100</td>
 <td class="org-right">nan</td>
 <td class="org-right">nan</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
+<td class="org-left">2026-01-25 06:29:03</td>
+<td class="org-left">2026-01-25 18:38:58</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1158,7 +1232,7 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-20 04:45:12</td>
+<td class="org-left">2026-01-24 21:30:07</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">500</td>
@@ -1166,24 +1240,24 @@ table
 <td class="org-left">light rain</td>
 <td class="org-left">10n</td>
 <td class="org-left">stations</td>
-<td class="org-right">23.89</td>
-<td class="org-right">24.63</td>
-<td class="org-right">23.89</td>
-<td class="org-right">23.89</td>
-<td class="org-right">1010</td>
-<td class="org-right">88</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">25.82</td>
+<td class="org-right">26.68</td>
+<td class="org-right">25.82</td>
+<td class="org-right">25.82</td>
+<td class="org-right">1014</td>
+<td class="org-right">85</td>
+<td class="org-right">1014</td>
+<td class="org-right">1009</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.41</td>
-<td class="org-right">344</td>
-<td class="org-right">0.52</td>
+<td class="org-right">2.21</td>
+<td class="org-right">224</td>
+<td class="org-right">3.09</td>
 <td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1191,32 +1265,32 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-21 04:45:02</td>
+<td class="org-left">2026-01-25 01:15:02</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
+<td class="org-right">500</td>
+<td class="org-left">Rain</td>
+<td class="org-left">light rain</td>
+<td class="org-left">10n</td>
 <td class="org-left">stations</td>
-<td class="org-right">24.7</td>
-<td class="org-right">25.29</td>
-<td class="org-right">24.7</td>
-<td class="org-right">24.7</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">24.32</td>
+<td class="org-right">25.08</td>
+<td class="org-right">24.32</td>
+<td class="org-right">24.32</td>
+<td class="org-right">1013</td>
+<td class="org-right">87</td>
+<td class="org-right">1013</td>
+<td class="org-right">1008</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.65</td>
-<td class="org-right">226</td>
-<td class="org-right">0.95</td>
+<td class="org-right">1.62</td>
+<td class="org-right">189</td>
+<td class="org-right">2.33</td>
 <td class="org-right">100</td>
 <td class="org-right">nan</td>
 <td class="org-right">nan</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-21 06:27:54</td>
-<td class="org-left">2026-01-21 18:38:01</td>
+<td class="org-left">2026-01-25 06:29:03</td>
+<td class="org-left">2026-01-25 18:38:58</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1224,32 +1298,32 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-21 05:00:03</td>
+<td class="org-left">2026-01-25 00:15:09</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
+<td class="org-right">500</td>
+<td class="org-left">Rain</td>
+<td class="org-left">light rain</td>
+<td class="org-left">10n</td>
 <td class="org-left">stations</td>
-<td class="org-right">24.7</td>
-<td class="org-right">25.29</td>
-<td class="org-right">24.7</td>
-<td class="org-right">24.7</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">24.43</td>
+<td class="org-right">25.2</td>
+<td class="org-right">24.43</td>
+<td class="org-right">24.43</td>
+<td class="org-right">1014</td>
+<td class="org-right">87</td>
+<td class="org-right">1014</td>
+<td class="org-right">1009</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.65</td>
-<td class="org-right">226</td>
-<td class="org-right">0.95</td>
+<td class="org-right">1.56</td>
+<td class="org-right">198</td>
+<td class="org-right">2.23</td>
 <td class="org-right">100</td>
 <td class="org-right">nan</td>
 <td class="org-right">nan</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-21 06:27:54</td>
-<td class="org-left">2026-01-21 18:38:01</td>
+<td class="org-left">2026-01-25 06:29:03</td>
+<td class="org-left">2026-01-25 18:38:58</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1257,32 +1331,32 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-20 06:30:10</td>
+<td class="org-left">2026-01-24 22:30:08</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04d</td>
+<td class="org-right">500</td>
+<td class="org-left">Rain</td>
+<td class="org-left">light rain</td>
+<td class="org-left">10n</td>
 <td class="org-left">stations</td>
 <td class="org-right">25.82</td>
 <td class="org-right">26.7</td>
 <td class="org-right">25.82</td>
 <td class="org-right">25.82</td>
-<td class="org-right">1012</td>
+<td class="org-right">1014</td>
 <td class="org-right">86</td>
-<td class="org-right">1012</td>
-<td class="org-right">1007</td>
+<td class="org-right">1014</td>
+<td class="org-right">1009</td>
 <td class="org-right">10000</td>
-<td class="org-right">1.32</td>
-<td class="org-right">326</td>
-<td class="org-right">1.67</td>
-<td class="org-right">99</td>
+<td class="org-right">2.01</td>
+<td class="org-right">216</td>
+<td class="org-right">2.95</td>
+<td class="org-right">100</td>
 <td class="org-right">1.0</td>
 <td class="org-right">8552.0</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1290,7 +1364,7 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-21 05:10:55</td>
+<td class="org-left">2026-01-24 20:00:08</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">804</td>
@@ -1298,24 +1372,24 @@ table
 <td class="org-left">overcast clouds</td>
 <td class="org-left">04n</td>
 <td class="org-left">stations</td>
-<td class="org-right">24.7</td>
-<td class="org-right">25.29</td>
-<td class="org-right">24.7</td>
-<td class="org-right">24.7</td>
-<td class="org-right">1010</td>
-<td class="org-right">79</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">26.82</td>
+<td class="org-right">29.69</td>
+<td class="org-right">26.82</td>
+<td class="org-right">26.82</td>
+<td class="org-right">1012</td>
+<td class="org-right">84</td>
+<td class="org-right">1012</td>
+<td class="org-right">1007</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.65</td>
-<td class="org-right">226</td>
-<td class="org-right">0.95</td>
+<td class="org-right">2.71</td>
+<td class="org-right">244</td>
+<td class="org-right">4.25</td>
 <td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-21 06:27:54</td>
-<td class="org-left">2026-01-21 18:38:01</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1323,40 +1397,7 @@ table
 </tr>
 
 <tr>
-<td class="org-left">2026-01-20 05:45:10</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">23.94</td>
-<td class="org-right">24.69</td>
-<td class="org-right">23.94</td>
-<td class="org-right">23.94</td>
-<td class="org-right">1011</td>
-<td class="org-right">88</td>
-<td class="org-right">1011</td>
-<td class="org-right">1006</td>
-<td class="org-right">10000</td>
-<td class="org-right">0.63</td>
-<td class="org-right">26</td>
-<td class="org-right">0.79</td>
-<td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-20 05:00:07</td>
+<td class="org-left">2026-01-24 22:00:09</td>
 <td class="org-right">-80.4544</td>
 <td class="org-right">-1.0546</td>
 <td class="org-right">500</td>
@@ -1364,57 +1405,24 @@ table
 <td class="org-left">light rain</td>
 <td class="org-left">10n</td>
 <td class="org-left">stations</td>
-<td class="org-right">23.89</td>
-<td class="org-right">24.63</td>
-<td class="org-right">23.89</td>
-<td class="org-right">23.89</td>
-<td class="org-right">1010</td>
-<td class="org-right">88</td>
-<td class="org-right">1010</td>
-<td class="org-right">1005</td>
+<td class="org-right">25.82</td>
+<td class="org-right">26.68</td>
+<td class="org-right">25.82</td>
+<td class="org-right">25.82</td>
+<td class="org-right">1014</td>
+<td class="org-right">85</td>
+<td class="org-right">1014</td>
+<td class="org-right">1009</td>
 <td class="org-right">10000</td>
-<td class="org-right">0.41</td>
-<td class="org-right">344</td>
-<td class="org-right">0.52</td>
+<td class="org-right">2.21</td>
+<td class="org-right">224</td>
+<td class="org-right">3.09</td>
 <td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
+<td class="org-right">1.0</td>
+<td class="org-right">8552.0</td>
 <td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
-<td class="org-right">-18000</td>
-<td class="org-right">3652941</td>
-<td class="org-left">Portoviejo</td>
-<td class="org-right">200</td>
-</tr>
-
-<tr>
-<td class="org-left">2026-01-20 06:00:11</td>
-<td class="org-right">-80.4544</td>
-<td class="org-right">-1.0546</td>
-<td class="org-right">804</td>
-<td class="org-left">Clouds</td>
-<td class="org-left">overcast clouds</td>
-<td class="org-left">04n</td>
-<td class="org-left">stations</td>
-<td class="org-right">23.94</td>
-<td class="org-right">24.69</td>
-<td class="org-right">23.94</td>
-<td class="org-right">23.94</td>
-<td class="org-right">1011</td>
-<td class="org-right">88</td>
-<td class="org-right">1011</td>
-<td class="org-right">1006</td>
-<td class="org-right">10000</td>
-<td class="org-right">0.63</td>
-<td class="org-right">26</td>
-<td class="org-right">0.79</td>
-<td class="org-right">100</td>
-<td class="org-right">nan</td>
-<td class="org-right">nan</td>
-<td class="org-left">EC</td>
-<td class="org-left">2026-01-20 06:27:35</td>
-<td class="org-left">2026-01-20 18:37:44</td>
+<td class="org-left">2026-01-24 06:28:47</td>
+<td class="org-left">2026-01-24 18:38:45</td>
 <td class="org-right">-18000</td>
 <td class="org-right">3652941</td>
 <td class="org-left">Portoviejo</td>
@@ -1427,8 +1435,8 @@ table
 </div>
 
 
-<div id="outline-container-org59b3945" class="outline-2">
-<h2 id="org59b3945"><span class="section-number-2">3.</span> Gráfica de la Temperatura en el Tiempo.</h2>
+<div id="outline-container-org103bcf2" class="outline-2">
+<h2 id="org103bcf2"><span class="section-number-2">3.</span> Gráfica de la Temperatura en el Tiempo.</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 El siguiente cógido permite hacer la gráfica de la temperatura vs
@@ -1476,14 +1484,14 @@ tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
 </div>
 
 
-<div id="orga703330" class="figure">
+<div id="org608317e" class="figure">
 <p><img src="./images/temperature_style.png" alt="temperature_style.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgfc7afc2" class="outline-3">
-<h3 id="orgfc7afc2"><span class="section-number-3">3.1.</span> Gráfica de Humedad con respecto al Tiempo.</h3>
+<div id="outline-container-orgcb3a9c8" class="outline-3">
+<h3 id="orgcb3a9c8"><span class="section-number-3">3.1.</span> Gráfica de Humedad con respecto al Tiempo.</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
@@ -1522,15 +1530,15 @@ tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
 </pre>
 </div>
 
-<div id="org2087424" class="figure">
+<div id="orge79eb39" class="figure">
 <p><img src="./images/humidity.png" alt="humidity.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9d220f4" class="outline-3">
-<h3 id="org9d220f4"><span class="section-number-3">3.2.</span> Gráfica de Presión Atmosférica.</h3>
+<div id="outline-container-org65f3fa7" class="outline-3">
+<h3 id="org65f3fa7"><span class="section-number-3">3.2.</span> Gráfica de Presión Atmosférica.</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="font-weight: bold;">import</span> matplotlib.pyplot <span style="font-weight: bold;">as</span> plt
@@ -1571,7 +1579,7 @@ tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
 </div>
 
 
-<div id="orgff6c61c" class="figure">
+<div id="org1c16873" class="figure">
 <p><img src="./images/pressure.png" alt="pressure.png" />
 </p>
 </div>
@@ -1579,8 +1587,8 @@ tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
 </div>
 </div>
 
-<div id="outline-container-orgf8fdf48" class="outline-2">
-<h2 id="orgf8fdf48"><span class="section-number-2">4.</span> Sincronización y Configuración del Servidor</h2>
+<div id="outline-container-orgf382be9" class="outline-2">
+<h2 id="orgf382be9"><span class="section-number-2">4.</span> Sincronización y Configuración del Servidor</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Debido a que el archivo <code>index.org</code> utiliza rutas relativas
@@ -1610,9 +1618,45 @@ mkdir -p <span style="font-style: italic;">"$IMG_PUBLIC"</span>
 </div>
 </div>
 
-<div id="outline-container-org4281ade" class="outline-2">
-<h2 id="org4281ade"><span class="section-number-2">5.</span> Generación del Sitio Web</h2>
+<div id="outline-container-org7b60417" class="outline-2">
+<h2 id="org7b60417"><span class="section-number-2">5.</span> Sincronización para todo el Directorio.</h2>
 <div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">1. Definir rutas
+</span><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Origen
+</span><span style="font-weight: bold; font-style: italic;">SRC_DIR</span>=<span style="font-style: italic;">"/home/alejandro/PortoviejoWeather/weather-site/content/images/"</span>
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Destinos
+</span><span style="font-weight: bold; font-style: italic;">DEST_ROOT</span>=<span style="font-style: italic;">"/home/alejandro/PortoviejoWeather/images"</span>
+<span style="font-weight: bold; font-style: italic;">DEST_PUBLIC</span>=<span style="font-style: italic;">"/home/alejandro/PortoviejoWeather/public/images"</span>
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">2. Crear carpetas si no existen
+</span>mkdir -p <span style="font-style: italic;">"$DEST_ROOT"</span>
+mkdir -p <span style="font-style: italic;">"$DEST_PUBLIC"</span>
+
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">3. Sincronizar im&#225;genes
+</span><span style="font-weight: bold;">if</span> [ -d <span style="font-style: italic;">"$SRC_DIR"</span> ] &amp;&amp; [ <span style="font-style: italic;">"$(</span><span style="font-weight: bold;">ls -A $SRC_DIR</span><span style="font-style: italic;">)"</span> ]; <span style="font-weight: bold;">then</span>
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Copiar a la carpeta images en la ra&#237;z
+</span>    <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Copiando a $DEST_ROOT..."</span>
+    cp -rfv <span style="font-style: italic;">"$SRC_DIR"</span>* <span style="font-style: italic;">"$DEST_ROOT"</span>
+
+    <span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Copiar a la carpeta public/images
+</span>    <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Copiando a $DEST_PUBLIC..."</span>
+    cp -rfv <span style="font-style: italic;">"$SRC_DIR"</span>* <span style="font-style: italic;">"$DEST_PUBLIC"</span>
+
+    <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Sincronizacion completada en todos los destinos."</span>
+<span style="font-weight: bold;">else</span>
+    <span style="font-weight: bold;">echo</span> <span style="font-style: italic;">"Error: La carpeta de origen ($SRC_DIR) no existe o esta vacia."</span>
+<span style="font-weight: bold;">fi</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org403f6f9" class="outline-2">
+<h2 id="org403f6f9"><span class="section-number-2">6.</span> Generación del Sitio Web</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 Presiona <code>C-c C-c</code> para actualizar la estructura de archivos y reconstruir el HTML con el estilo CSS moderno.
 </p>
@@ -1637,6 +1681,25 @@ chmod +x build.sh
 </div>
 </div>
 </div>
+
+<div id="outline-container-org6c8ec5c" class="outline-2">
+<h2 id="org6c8ec5c"><span class="section-number-2">7.</span> Programa de Conversión</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<a href="DecimalAIEEE.html">Conversión Decimal a IEEE</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orga8b40ab" class="outline-2">
+<h2 id="orga8b40ab"><span class="section-number-2">8.</span> Análisis del Clima Jupyter</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+<a href="CityTemperatureAnalysis.html">Análisis del Clima</a>
+</p>
+</div>
+</div>
 <div id="footnotes">
 <h2 class="footnotes">Notas al pie de p&aacute;gina: </h2>
 <div id="text-footnotes">
@@ -1653,7 +1716,7 @@ de Python
 <div id="postamble" class="status">
 <p class="date">Fecha: 2024-08-07</p>
 <p class="author">Autor: Alejandro Navarrete; Samuel Crespo; Elvis Carlosama &amp; Juan Quinatoa.</p>
-<p class="date">Created: 2026-01-21 Wed 05:56</p>
+<p class="date">Created: 2026-01-25 Sun 03:27</p>
 </div>
 </body>
 </html>
